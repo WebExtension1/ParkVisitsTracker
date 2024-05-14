@@ -1,0 +1,132 @@
+/* Users */
+
+CREATE TABLE If Not Exists Users (
+    userID int NOT NULL AUTO_INCREMENT,
+    username text NOT NULL,
+    email text NOT NULL,
+    password text NOT NULL,
+    registerDate datetime NOT NULL,
+    visibility text NOT NULL,
+    bio text,
+    PRIMARY KEY (userID ASC)
+);
+
+CREATE TABLE If Not Exists Followings (
+    follower int NOT NULL,
+    following int NOT NULL,
+    FOREIGN KEY (follower) REFERENCES Users (userID),
+    FOREIGN KEY (following) REFERENCES Users (userID)
+);
+
+CREATE TABLE If Not Exists Blocks (
+    blocker int NOT NULL,
+    blocked int NOT NULL,
+    FOREIGN KEY (blocker) REFERENCES Users (userID),
+    FOREIGN KEY (blocked) REFERENCES Users (userID)
+);
+
+CREATE TABLE If Not Exists Friends (
+    friendA int NOT NULL,
+    friendB int NOT NULL,
+    FOREIGN KEY (friendA) REFERENCES Users (userID),
+    FOREIGN KEY (friendB) REFERENCES Users (userID)
+);
+
+CREATE TABLE If Not Exists FriendRequests (
+    requestedBy int NOT NULL,
+    requestedTo int NOT NULL,
+    FOREIGN KEY (requestedBy) REFERENCES Users (userID),
+    FOREIGN KEY (requestedTo) REFERENCES Users (userID)
+);
+
+CREATE TABLE If Not Exists SocialTypes (
+    socialTypeID int NOT NULL AUTO_INCREMENT,
+    socialName text NOT NULL,
+    PRIMARY KEY (socialTypeID ASC)
+);
+INSERT INTO SocialTypes (socialName) VALUES
+("Youtube"),
+("Twitter"),
+("Facebook"),
+("Instagram"),
+("Twitch"),
+("Reddit"),
+("Tiktok"),
+("Steam"),
+("Xbox"),
+("PSN");
+
+CREATE TABLE If Not Exists UserSocials (
+    userID int NOT NULL,
+    socialTypeID int NOT NULL,
+    link text NOT NULL,
+    FOREIGN KEY (userID) REFERENCES Users (userID),
+    FOREIGN KEY (socialTypeID) REFERENCES SocialTypes (socialTypeID)
+);
+
+CREATE TABLE If Not Exists ReportReasons (
+    reportReasonID int NOT NULL AUTO_INCREMENT,
+    reasonName text NOT NULL,
+    PRIMARY KEY (reportReasonID ASC)
+);
+INSERT INTO ReportReasons (reasonName) VALUES 
+("Inappropriate Username"),
+("Inappropriate Bio"),
+("Inappropriate Profile Picture");
+
+CREATE TABLE If Not Exists Reports (
+    reportID int NOT NULL AUTO_INCREMENT,
+    reportReasonID int NOT NULL,
+    reportedBy int NOT NULL,
+    reported int NOT NULL,
+    explanation text,
+    PRIMARY KEY (reportID ASC),
+    FOREIGN KEY (reportReasonID) REFERENCES ReportReasons (reportReasonID),
+    FOREIGN KEY (reportedBy) REFERENCES Users (userID),
+    FOREIGN KEY (reported) REFERENCES Users (userID)
+);
+
+/* Recipes */
+
+CREATE TABLE If Not Exists Recipes (
+    recipeID int NOT NULL AUTO_INCREMENT,
+    recipeName text NOT NULL,
+    description text,
+    time time,
+    minServe int,
+    maxServe int,
+    PRIMARY KEY (recipeID ASC)
+);
+
+CREATE TABLE If Not Exists Ingredients (
+    ingredientID int NOT NULL AUTO_INCREMENT,
+    ingredientName text NOT NULL,
+    PRIMARY KEY (ingredientID ASC)
+);
+
+CREATE TABLE If Not Exists IngredientStorage (
+    ingredientID int NOT NULL,
+    amount text NOT NULL,
+    FOREIGN KEY (ingredientID) REFERENCES Ingredients (ingredientID)
+);
+
+CREATE TABLE If Not Exists RecipeIngredients (
+    recipeID int NOT NULL,
+    ingredientID int NOT NULL,
+    amount text NOT NULL,
+    FOREIGN KEY (recipeID) REFERENCES Recipes (recipeID),
+    FOREIGN KEY (ingredientID) REFERENCES Ingredients (ingredientID)
+);
+
+CREATE TABLE If Not Exists RecipeSteps (
+    recipeID int NOT NULL,
+    stepNumber int NOT NULL,
+    explanation text NOT NULL,
+    FOREIGN KEY (recipeID) REFERENCES Recipes (recipeID)
+);
+
+CREATE TABLE If Not Exists RecipeStorage (
+    recipeID int NOT NULL,
+    amount int NOT NULL,
+    FOREIGN KEY (recipeID) REFERENCES Recipes (recipeID)
+);
