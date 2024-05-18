@@ -130,3 +130,434 @@ CREATE TABLE If Not Exists RecipeStorage (
     amount int NOT NULL,
     FOREIGN KEY (recipeID) REFERENCES Recipes (recipeID)
 );
+
+/* Games */
+
+CREATE TABLE If Not Exists GameCompletionTypes (
+    completionTypeID int NOT NULL AUTO_INCREMENT,
+    completionType text NOT NULL,
+    PRIMARY KEY (completionTypeID ASC)
+);
+INSERT INTO GameCompletionTypes (completionType) VALUES
+("Platinum, not 100%"),
+("Platinum and 100%"),
+("100%");
+
+CREATE TABLE If Not Exists Games (
+    gameID int NOT NULL AUTO_INCREMENT,
+    gameName text NOT NULL,
+    PRIMARY KEY (gameID ASC)
+);
+
+CREATE TABLE If Not Exists GamePlatforms (
+    platformID int NOT NULL AUTO_INCREMENT,
+    platformName text NOT NULL,
+    PRIMARY KEY (platformID ASC)
+);
+
+CREATE TABLE If Not Exists GameFormats (
+    formatID int NOT NULL AUTO_INCREMENT,
+    formatName text NOT NULL,
+    PRIMARY KEY (formatID ASC)
+);
+
+CREATE TABLE If Not Exists GameCEX (
+    gameID int NOT NULL,
+    link text NOT NULL,
+    cash int NOT NULL,
+    voucher int NOT NULL,
+    FOREIGN KEY (gameID) REFERENCES Games (gameID)
+);
+
+CREATE TABLE If Not Exists GameGuides (
+    gameID int NOT NULL,
+    link text,
+    difficulty int NOT NULL,
+    hours int NOT NULL,
+    attainable tinyint,
+    FOREIGN KEY (gameID) REFERENCES Games (gameID)
+);
+
+CREATE TABLE If Not Exists GameInLibrary (
+    gameInLibraryID int NOT NULL AUTO_INCREMENT,
+    gameID int NOT NULL,
+    platformID int NOT NULL,
+    formatID int NOT NULL,
+    owner int NOT NULL,
+    platinum tinyint NOT NULL,
+    PRIMARY KEY (gameInLibraryID ASC),
+    FOREIGN KEY (gameID) REFERENCES Games (gameID),
+    FOREIGN KEY (platformID) REFERENCES GamePlatforms (platformID),
+    FOREIGN KEY (formatID) REFERENCES GameFormats (formatID),
+    FOREIGN KEY (owner) REFERENCES Users (userID)
+);
+
+CREATE TABLE If Not Exists PhysicalGameOwner (
+    gameInLibraryID int NOT NULL,
+    userID int NOT NULL,
+    FOREIGN KEY (gameInLibraryID) REFERENCES GameInLibrary (gameInLibraryID),
+    FOREIGN KEY (userID) REFERENCES Users (userID)
+);
+
+CREATE TABLE If Not Exists GameCompleted (
+    gameID int NOT NULL,
+    userID int NOT NULL,
+    completionTypeID int NOT NULL,
+    FOREIGN KEY (gameID) REFERENCES Games (gameID),
+    FOREIGN KEY (userID) REFERENCES Users (userID),
+    FOREIGN KEY (completionTypeID) REFERENCES GameCompletionTypes (completionTypeID)
+);
+
+CREATE TABLE If Not Exists GameNotes (
+    gameID int NOT NULL,
+    userID int NOT NULL,
+    notes text NOT NULL,
+    FOREIGN KEY (gameID) REFERENCES Games (gameID),
+    FOREIGN KEY (userID) REFERENCES Users (userID)
+);
+
+CREATE TABLE If Not Exists GameWishlist (
+    gameID int NOT NULL,
+    platformID int NOT NULL,
+    formatID int NOT NULL,
+    userID int NOT NULL,
+    FOREIGN KEY (gameID) REFERENCES Games (gameID),
+    FOREIGN KEY (platformID) REFERENCES GamePlatforms (platformID),
+    FOREIGN KEY (formatID) REFERENCES GameFormats (formatID),
+    FOREIGN KEY (userID) REFERENCES Users (userID)
+);
+
+/* Concerts */
+
+CREATE TABLE If Not Exists Bands (
+    bandID int NOT NULL AUTO_INCREMENT,
+    bandName text NOT NULL,
+    PRIMARY KEY (bandID ASC)
+);
+
+CREATE TABLE If Not Exists BandExternalLinks (
+    bandID int NOT NULL,
+    link text NOT NULL,
+    FOREIGN KEY (bandID) REFERENCES Bands (bandID)
+);
+
+CREATE TABLE If Not Exists Albums (
+    albumID int NOT NULL AUTO_INCREMENT,
+    albumName text NOT NULL,
+    bandID int NOT NULL,
+    PRIMARY KEY (albumID ASC),
+    FOREIGN KEY (bandID) REFERENCES Bands (bandID)    
+);
+
+CREATE TABLE If Not Exists AlbumExternalLinks (
+    albumID int NOT NULL,
+    link text NOT NULL,
+    FOREIGN KEY (albumID) REFERENCES Albums (albumID)
+);
+
+CREATE TABLE If Not Exists Tours (
+    tourID int NOT NULL AUTO_INCREMENT,
+    tourName text NOT NULL,
+    PRIMARY KEY (tourID ASC)
+);
+
+CREATE TABLE If Not Exists TourAlbums (
+    tourID int NOT NULL,
+    albumID int NOT NULL,
+    FOREIGN KEY (tourID) REFERENCES Tours (tourID),
+    FOREIGN KEY (albumID) REFERENCES Albums (albumID)
+);
+
+CREATE TABLE If Not Exists Cities (
+    cityID int NOT NULL AUTO_INCREMENT,
+    cityName text NOT NULL,
+    PRIMARY KEY (cityID ASC)
+);
+
+CREATE TABLE If Not Exists Venues (
+    venueID int NOT NULL AUTO_INCREMENT,
+    venueName text NOT NULL,
+    cityID int NOT NULL,
+    PRIMARY KEY (venueID ASC),
+    FOREIGN KEY (cityID) REFERENCES Cities (cityID)
+);
+
+CREATE TABLE If Not Exists VenueExternalLinks (
+    venueID int NOT NULL,
+    link text NOT NULL,
+    FOREIGN KEY (venueID) REFERENCES Venues (venueID)
+);
+
+CREATE TABLE If Not Exists Concerts (
+    concertID int NOT NULL AUTO_INCREMENT,
+    venueID int NOT NULL,
+    concertName text NOT NULL,
+    date datetime NOT NULL,
+    PRIMARY KEY (concertID ASC),
+    FOREIGN KEY (venueID) REFERENCES Venues (venueID)
+);
+
+CREATE TABLE If Not Exists ConcertExternalLinks (
+    concertID int NOT NULL,
+    link text NOT NULL,
+    FOREIGN KEY (concertID) REFERENCES Concerts (concertID)
+);
+
+CREATE TABLE If Not Exists ConcertLink (
+    concertID int NOT NULL,
+    userID int NOT NULL,
+    FOREIGN KEY (concertID) REFERENCES Concerts (concertID),
+    FOREIGN KEY (userID) REFERENCES Users (userID)
+);
+
+CREATE TABLE If Not Exists TourLink (
+    concertID int NOT NULL,
+    tourID int NOT NULL,
+    FOREIGN KEY (concertID) REFERENCES Concerts (concertID),
+    FOREIGN KEY (tourID) REFERENCES Tours (tourID)
+);
+
+CREATE TABLE If Not Exists Songs (
+    songID int NOT NULL AUTO_INCREMENT,
+    songName text NOT NULL,
+    PRIMARY KEY (songID ASC)
+);
+
+CREATE TABLE If Not Exists SongExternalLinks (
+    songID int NOT NULL,
+    link text NOT NULL,
+    FOREIGN KEY (songID) REFERENCES Songs (songID)
+);
+
+CREATE TABLE If Not Exists SongBands (
+    songID int NOT NULL,
+    bandID int NOT NULL,
+    FOREIGN KEY (songID) REFERENCES Songs (songID),
+    FOREIGN KEY (bandID) REFERENCES Bands (bandID)
+);
+
+CREATE TABLE If Not Exists AlbumLink (
+    albumID int NOT NULL,
+    songID int NOT NULL,
+    position int NOT NULL,
+    FOREIGN KEY (albumID) REFERENCES Albums (albumID),
+    FOREIGN KEY (songID) REFERENCES Songs (songID)
+);
+
+CREATE TABLE If Not Exists Setlists (
+    setlistID int NOT NULL AUTO_INCREMENT,
+    setlistName text NOT NULL,
+    PRIMARY KEY (setlistID ASC)
+);
+
+CREATE TABLE If Not Exists SetlistLink (
+    concertID int NOT NULL,
+    setlistID int NOT NULL,
+    position int NOT NULL,
+    FOREIGN KEY (concertID) REFERENCES Concerts (concertID),
+    FOREIGN KEY (setlistID) REFERENCES Setlists (setlistID)
+);
+
+CREATE TABLE If Not Exists SongLink (
+    setlistID int NOT NULL,
+    songID int NOT NULL,
+    position int NOT NULL,
+    FOREIGN KEY (setlistID) REFERENCES Setlists (setlistID),
+    FOREIGN KEY (songID) REFERENCES Songs (songID)
+);
+
+CREATE TABLE If Not Exists SetlistBreaks (
+    setlistID int NOT NULL,
+    name text NOT NULL,
+    position int NOT NULL,
+    FOREIGN KEY (setlistID) REFERENCES Setlists (setlistID)
+);
+
+CREATE TABLE If Not Exists SetlistExternalLinks (
+    setlistID int NOT NULL,
+    link text NOT NULL,
+    FOREIGN KEY (setlistID) REFERENCES Setlists (setlistID)
+);
+
+/* Theme Parks */
+
+CREATE TABLE If Not Exists Locations (
+    locationID int NOT NULL AUTO_INCREMENT,
+    country text NOT NULL,
+    region text NOT NULL,
+    PRIMARY KEY (locationID ASC)
+);
+
+CREATE TABLE If Not Exists Parks (
+    parkID int NOT NULL AUTO_INCREMENT,
+    parkName text NOT NULL,
+    locationID int NOT NULL,
+    PRIMARY KEY (parkID ASC),
+    FOREIGN KEY (locationID) REFERENCES Locations (locationID)
+);
+
+CREATE TABLE If Not Exists ParkGroups (
+    parkGroupID int NOT NULL AUTO_INCREMENT,
+    parkGroupName text NOT NULL,
+    PRIMARY KEY (parkGroupID ASC)
+);
+
+CREATE TABLE If Not Exists ParkGroupParks (
+    parkID int NOT NULL,
+    parkGroupID INT not null,
+    FOREIGN KEY (parkID) REFERENCES Parks (parkID),
+    FOREIGN KEY (parkGroupID) REFERENCES ParkGroups (parkGroupID)
+);
+
+CREATE TABLE If Not Exists ParkExternalLinks (
+    parkID int NOT NULL,
+    link text NOT NULL,
+    FOREIGN KEY (parkID) REFERENCES Parks (parkID)
+);
+
+CREATE TABLE If Not Exists NewParks (
+    userID int NOT NULL,
+    newParkName text NOT NULL,
+    description text NOT NULL,
+    FOREIGN KEY (userID) REFERENCES Users (userID)
+);
+
+CREATE TABLE If Not Exists NewAttractions (
+    userID int NOT NULL,
+    newAttractionName text NOT NULL,
+    parkID int NOT NULL,
+    description text NOT NULL,
+    FOREIGN KEY (userID) REFERENCES Users (userID),
+    FOREIGN KEY (parkID) REFERENCES Parks (parkID)
+);
+
+CREATE TABLE If Not Exists Visits (
+    visitID int NOT NULL AUTO_INCREMENT,
+    createdBy int NOT NULL,
+    date date NOT NULL,
+    PRIMARY KEY (visitID),
+    FOREIGN KEY (createdBy) REFERENCES Users (userID)
+);
+
+CREATE TABLE If Not Exists VisitPark (
+    visitID int NOT NULL,
+    parkID int NOT NULL,
+    arrivalTime time,
+    departureTime time,
+    position int NOT NULL,
+    FOREIGN KEY (visitID) REFERENCES Visits (visitID),
+    FOREIGN KEY (parkID) REFERENCES Parks (parkID)
+);
+
+CREATE TABLE If Not Exists VisitLink (
+    visitID int NOT NULL,
+    userID int NOT NULL,
+    FOREIGN KEY (visitID) REFERENCES Visits (visitID),
+    FOREIGN KEY (userID) REFERENCES Users (userID)
+);
+
+CREATE TABLE If Not Exists ParkClosing (
+    parkID int NOT NULL,
+    day int,
+    month int,
+    year int,
+    FOREIGN KEY (parkID) REFERENCES Parks (parkID)
+);
+
+CREATE TABLE If Not Exists ParkOpening (
+    parkID int NOT NULL,
+    day int,
+    month int,
+    year int,
+    FOREIGN KEY (parkID) REFERENCES Parks (parkID)
+);
+
+CREATE TABLE If Not Exists Regions (
+    regionID int NOT NULL AUTO_INCREMENT,
+    regionName text NOT NULL,
+    parkID int NOT NULL,
+    PRIMARY KEY (regionID ASC),
+    FOREIGN KEY (parkID) REFERENCES Parks (parkID)
+);
+
+CREATE TABLE If Not Exists RegionClosing (
+    parkID int NOT NULL,
+    day int,
+    month int,
+    year int,
+    FOREIGN KEY (parkID) REFERENCES Parks (parkID)
+);
+
+CREATE TABLE If Not Exists RegionOpening (
+    parkID int NOT NULL,
+    day int,
+    month int,
+    year int,
+    FOREIGN KEY (parkID) REFERENCES Parks (parkID)
+);
+
+CREATE TABLE If Not Exists RegionReplacement (
+    oldRegion int NOT NULL,
+    newRegion int NOT NULL,
+    FOREIGN KEY (oldRegion) REFERENCES Regions (regionID),
+    FOREIGN KEY (newRegion) REFERENCES Regions (regionID)
+);
+
+CREATE TABLE If Not Exists RegionExternalLinks (
+    regionID int NOT NULL,
+    link text NOT NULL,
+    FOREIGN KEY (regionID) REFERENCES Regions (regionID)
+);
+
+CREATE TABLE If Not Exists AttractionTypes (
+    attractionTypeID int NOT NULL AUTO_INCREMENT,
+    attractionTypeName text NOT NULL,
+    PRIMARY KEY (attractionTypeID ASC)
+);
+INSERT INTO AttractionTypes (attractionTypeName) VALUES
+("Rollercoaster"),
+("Flat Ride"),
+("Trackless Ride"),
+("Motion Simulator"),
+("Show"),
+("Shop"),
+("Restaurant");
+
+CREATE TABLE If Not Exists Attractions (
+    attractionID int NOT NULL AUTO_INCREMENT,
+    attractionName text NOT NULL,
+    attractionTypeID int NOT NULL,
+    regionID int NOT NULL,
+    PRIMARY KEY (attractionID ASC),
+    FOREIGN KEY (attractionTypeID) REFERENCES AttractionTypes (attractionTypeID),
+    FOREIGN KEY (regionID) REFERENCES Regions (regionID)
+);
+
+CREATE TABLE If Not Exists AttractionExternalLinks (
+    attractionID int NOT NULL,
+    link text NOT NULL,
+    FOREIGN KEY (attractionID) REFERENCES Attractions (attractionID)
+);
+
+CREATE TABLE If Not Exists AttractionClosing (
+    parkID int NOT NULL,
+    day int,
+    month int,
+    year int,
+    FOREIGN KEY (parkID) REFERENCES Parks (parkID)
+);
+
+CREATE TABLE If Not Exists AttractionOpening (
+    parkID int NOT NULL,
+    day int,
+    month int,
+    year int,
+    FOREIGN KEY (parkID) REFERENCES Parks (parkID)
+);
+
+CREATE TABLE If Not Exists AttractionReplacement (
+    oldAttraction int NOT NULL,
+    newAttraction int NOT NULL,
+    FOREIGN KEY (oldAttraction) REFERENCES Attractions (attractionID),
+    FOREIGN KEY (newAttraction) REFERENCES Attractions (attractionID)
+);
