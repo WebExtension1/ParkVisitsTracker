@@ -1,0 +1,16 @@
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME}\.php -f
+
+RewriteRule ^user/([0-9a-zA-Z_-]+) user.php?username=$1 [NC,l]
+
+RewriteRule ^user user.php [NC,l]
+
+RewriteRule ^login login.php [NC,l]
+
+RewriteRule ^signup signup.php [NC,l]
+
+RewriteRule ^game/(.*) game.php?game=$1 [NC,l]
+
+RewriteRule ^game game.php [NC,l]
+
+RewriteRule ^games game.php [NC,l]

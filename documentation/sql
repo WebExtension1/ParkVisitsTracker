@@ -146,6 +146,8 @@ INSERT INTO GameCompletionTypes (completionType) VALUES
 CREATE TABLE If Not Exists Games (
     gameID int NOT NULL AUTO_INCREMENT,
     gameName text NOT NULL,
+    PSN float,
+    PSNP float,
     PRIMARY KEY (gameID ASC)
 );
 
@@ -154,12 +156,23 @@ CREATE TABLE If Not Exists GamePlatforms (
     platformName text NOT NULL,
     PRIMARY KEY (platformID ASC)
 );
+INSERT INTO `gameplatforms`(`platformName`) VALUES
+("Playstation 2"),
+("Playstation 3"),
+("Playstation 4"),
+("Playstation 5"),
+("PSVR"),
+("PSVR2");
 
 CREATE TABLE If Not Exists GameFormats (
     formatID int NOT NULL AUTO_INCREMENT,
     formatName text NOT NULL,
     PRIMARY KEY (formatID ASC)
 );
+INSERT INTO `gameformats`(`formatName`) VALUES
+("Physical"),
+("Digital"),
+("Playstation Plus");
 
 CREATE TABLE If Not Exists GameCEX (
     gameID int NOT NULL,
@@ -561,3 +574,6 @@ CREATE TABLE If Not Exists AttractionReplacement (
     FOREIGN KEY (oldAttraction) REFERENCES Attractions (attractionID),
     FOREIGN KEY (newAttraction) REFERENCES Attractions (attractionID)
 );
+
+
+INSERT INTO `gameinlibrary`(`gameID`, `platformID`, `formatID`, `owner`, `platinum`) VALUES (1, 2, 1, 1, 1), (1, 3, 2, 2, 1), (1, 3, 2, 1, 1), (2, 3, 2, 2, 1), (2, 3, 2, 1, 1)
