@@ -10,7 +10,7 @@ if (isset($_POST['login'])) {
     if (isset($user)) {
         if (password_verify($password, $user->password)) {
             $_SESSION['userID'] = $user->userID;
-            header("Location: ../../webextension.info");
+            header("Location: index.php");
         } else {
             $error = "Password is incorrect";
         }

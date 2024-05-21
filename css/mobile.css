@@ -1,0 +1,15 @@
+.games-view-option {
+    display: flex;
+    flex-direction: row;
+}
+.games-view-option-1, .games-view-option-2 {
+    border: solid 1px black;
+    margin-left: -1px;
+    padding: 5px;
+}
+.games-view-option-1 {
+    background-color: gray;
+}
+.games-view-option-2 {
+    background-color: lightgray;
+}

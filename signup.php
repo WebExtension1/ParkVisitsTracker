@@ -33,7 +33,7 @@ if (isset($_POST['signup'])) {
         $newUserQuery->bind_param("sss", $username, $email, $passwordHash);
         $newUserQuery->execute();
         $_SESSION['userID'] = $newUserQuery->insert_id;
-        header("Location: ../../webextension.info");
+        header("Location: index.php");
     }
 }
 ?>
