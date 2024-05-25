@@ -1,4 +1,6 @@
-<?php include_once("includes/setup.php"); ?>
+<?php
+include_once("includes/setup.php");
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,8 +30,8 @@
             <p class="games-view-option-2">View All Games</p>
         </div>
         <div class="games-in-library">
-            <a href="">Add Game</a>
-            <table class="GameList">
+            <a href="new-game/library">Add Game</a>
+            <table class="gameList">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -42,7 +44,7 @@
                 </thead>
                 <tbody>
                     <?php
-                        $games = $mysqli->query("SELECT * FROM GameInLibrary, Games, GamePlatforms WHERE Games.gameID = GameInLibrary.gameID AND GameInLibrary.platformID = GamePlatforms.platformID");
+                        $games = $mysqli->query("SELECT * FROM GameInLibrary, Games, GamePlatforms WHERE Games.gameID = GameInLibrary.gameID AND GameInLibrary.platformID = GamePlatforms.platformID ORDER BY gameName ASC");
                         while ($game = $games->fetch_object()) {
                             echo "<tr><td>$game->gameName</td><td>$game->platformName</td>";
                             $percentages = $mysqli->query("SELECT * FROM GamePercentages, GamePlatforms WHERE GamePercentages.gameID = $game->gameID AND GamePercentages.platformID = GamePlatforms.platformID");
@@ -66,7 +68,29 @@
             </table>
         </div>
         <div class="all-games">
-            <a href="">Register Game</a>
+            <a href="new-game/register">Register Game</a>
+            <table class="gamelist">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Guides</th>
+                        <th>Owned</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        $games = $mysqli->query("SELECT * FROM Games ORDER BY gameName ASC");
+                        while ($game = $games->fetch_object()) {
+                            echo "<tr><td>$game->gameName</td>";
+                            $amount = mysqli_num_rows($mysqli->query("SELECT * FROM Games, GameGuides WHERE Games.gameID = GameGuides.gameID"));
+                            echo "<td>$amount</td>";
+                            $amount = mysqli_num_rows($mysqli->query("SELECT * FROM Games, GameInLibrary WHERE Games.gameID = GameInLibrary.gameID"));
+                            echo "<td>$amount</td><td>Add To Library</td>";
+                            echo "</tr>";
+                        }
+                    ?>
+                </tbody>
+            </table>
         </div>
     <?php
     }

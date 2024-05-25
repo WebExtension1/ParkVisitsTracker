@@ -1,4 +1,6 @@
-<?php include_once("includes/setup.php"); ?>
+<?php
+include_once("includes/setup.php");
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -14,3 +14,7 @@ RewriteRule ^game/(.*) game.php?game=$1 [NC,l]
 RewriteRule ^game game.php [NC,l]
 
 RewriteRule ^games game.php [NC,l]
+
+RewriteRule ^new-game/(.*) new-game.php?type=$1 [NC,l]
+
+RewriteRule ^new-game new-game.php [NC,l]

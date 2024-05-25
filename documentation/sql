@@ -164,6 +164,7 @@ INSERT INTO `gameplatforms`(`platformName`) VALUES
 
 CREATE TABLE If Not Exists GamePercentages (
     gameID int NOT NULL,
+    link text NOT NULL,
     PSN float NOT NULL,
     PSNP float NOT NULL,
     platformID int NOT NULL,
