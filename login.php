@@ -27,7 +27,6 @@ if (isset($_POST['login'])) {
     <title>Login</title>
 </head>
 <body>
-    <?php include_once("includes/header.php"); ?>
     <div class="login-container">
         <h1>Login</h1>
         <form method="post">

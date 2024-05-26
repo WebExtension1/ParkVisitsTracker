@@ -35,6 +35,7 @@ if (isset($_POST['game-name'])) {
 </head>
 <body>
     <?php
+    include_once("includes/header.php");
     if (isset($_GET['type'])) {
         $type = $_GET['type'];
         if ($type == "register") {

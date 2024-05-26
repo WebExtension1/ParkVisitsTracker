@@ -13,6 +13,7 @@ include_once("includes/setup.php");
 </head>
 <body>
     <?php
+    include_once("includes/header.php");
     if (isset($_GET['game'])) {
         $gameName = $_GET['game'];
         $gameQuery = $mysqli->query("SELECT gameID FROM Games WHERE gameName = '$gameName'");

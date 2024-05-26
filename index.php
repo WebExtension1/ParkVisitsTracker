@@ -11,6 +11,7 @@ include_once("includes/setup.php");
     <link rel="stylesheet" href="css/desktop.css" media="only screen and (min-width : 790px)"/>
 </head>
 <body>
+    <?php include_once("includes/header.php"); ?>
     <p>Home</p>
 </body>
 </html>

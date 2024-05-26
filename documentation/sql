@@ -155,10 +155,12 @@ CREATE TABLE If Not Exists GamePlatforms (
     PRIMARY KEY (platformID ASC)
 );
 INSERT INTO `gameplatforms`(`platformName`) VALUES
+("Playstation 1"),
 ("Playstation 2"),
 ("Playstation 3"),
 ("Playstation 4"),
 ("Playstation 5"),
+("PSP"),
 ("PSVR"),
 ("PSVR2");
 

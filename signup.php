@@ -45,7 +45,6 @@ if (isset($_POST['signup'])) {
     <title>Sign up</title>
 </head>
 <body>
-    <?php include_once("includes/header.php"); ?>
     <div class="signup-container">
         <h1>Create your account</h1>
         <form method="post">

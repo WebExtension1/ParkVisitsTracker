@@ -10,6 +10,7 @@ include_once("includes/setup.php");
 </head>
 <body>
     <?php
+    include_once("includes/header.php");
     $username = $_GET['username'];
     $query = $mysqli->query("SELECT * FROM users WHERE username = '$username'");
     echo $query->fetch_object()->email;

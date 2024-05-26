@@ -1,33 +1,53 @@
-const newGuide = document.querySelector(".add-new-guide");
-const newCEX = document.querySelector(".add-new-cex");
-const newPSNP = document.querySelector(".add-new-psnp");
+newGuide = document.querySelector(".add-new-guide");
+newCEX = document.querySelector(".add-new-cex");
+newPSNP = document.querySelector(".add-new-psnp");
 
 newGuide.addEventListener("click", function() {
-    const newSection = document.querySelector(".guide-section").cloneNode(true);
+    newSection = document.querySelector(".guide-section").cloneNode(true);
     document.querySelector(".guide-sections").appendChild(newSection);
-    const children = newSection.children;
+    children = newSection.children;
     children[1].value = "";
     children[3].value = "";
     children[5].value = "";
 })
 
 newCEX.addEventListener("click", function() {
-    const newSection = document.querySelector(".cex-section").cloneNode(true);
-    document.querySelector(".cex-sections").appendChild(newSection);
-    const children = newSection.children;
-    children[1].value = "";
-    children[3].value = 0;
-    children[5].value = "";
-    children[7].value = "";
+    sectionContainer = document.querySelector(".cex-sections");
+    section = document.querySelector(".cex-section");
+    sectionChildren = section.children;
+    max = sectionChildren[3].childElementCount;
+
+    if (sectionContainer.childElementCount < max) {
+        newSection = section.cloneNode(true);
+        sectionContainer.appendChild(newSection);
+        children = newSection.children;
+        children[1].value = "";
+        children[3].value = 0;
+        children[5].value = "";
+        children[7].value = "";
+    }
+    if (sectionContainer.childElementCount == max) {
+        newCEX.style.display = "none";
+    }
 })
 
 newPSNP.addEventListener("click", function() {
-    const newSection = document.querySelector(".psnp-section").cloneNode(true);
-    document.querySelector(".psnp-sections").appendChild(newSection);
-    const children = newSection.children;
-    children[1].value = "";
-    children[3].value = 0;
-    children[5].value = "";
-    children[7].value = "";
-    children[9].checked = false;
+    sectionContainer = document.querySelector(".psnp-sections");
+    section = document.querySelector(".psnp-section");
+    sectionChildren = section.children;
+    max = sectionChildren[3].childElementCount;
+
+    if (sectionContainer.childElementCount < max) {
+        newSection = section.cloneNode(true);
+        sectionContainer.appendChild(newSection);
+        children = newSection.children;
+        children[1].value = "";
+        children[3].value = 0;
+        children[5].value = "";
+        children[7].value = "";
+        children[9].checked = false;
+    }
+    if (sectionContainer.childElementCount == max) {
+        newPSNP.style.display = "none";
+    }
 })
