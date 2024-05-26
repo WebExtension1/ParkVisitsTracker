@@ -167,6 +167,7 @@ CREATE TABLE If Not Exists GamePercentages (
     link text NOT NULL,
     PSN float NOT NULL,
     PSNP float NOT NULL,
+    hasPlatinum tinyint NOT NULL,
     platformID int NOT NULL,
     FOREIGN KEY (gameID) REFERENCES Games (gameID),
     FOREIGN KEY (platformID) REFERENCES GamePlatforms (platformID)
@@ -207,7 +208,6 @@ CREATE TABLE If Not Exists GameInLibrary (
     platformID int NOT NULL,
     formatID int NOT NULL,
     owner int NOT NULL,
-    platinum tinyint NOT NULL,
     PRIMARY KEY (gameInLibraryID ASC),
     FOREIGN KEY (gameID) REFERENCES Games (gameID),
     FOREIGN KEY (platformID) REFERENCES GamePlatforms (platformID),
