@@ -3,7 +3,7 @@ include_once("includes/setup.php");
 
 $errors = array();
 
-if (isset($_POST['game-name'])) {
+if (isset($_POST['register'])) {
     $gameNameExistsQuery = $mysqli->prepare("SELECT * FROM games WHERE gameName = ?");
     $gameNameExistsQuery->bind_param('s', $_POST['game-name']);
     $gameNameExistsQuery->execute();
@@ -16,8 +16,71 @@ if (isset($_POST['game-name'])) {
         $newGameQuery->bind_param('s', $_POST['game-name']);
         $newGameQuery->execute();
         $gameID = mysqli_insert_id($mysqli);
-        echo $gameID;
         
+        $guidesSQL = "INSERT INTO gameguides (gameID, link, difficulty, hours) VALUES ";
+        $guidesValid = false;
+        for ($guideID = 0; $guideID < count($_POST['guide-link']); $guideID++) {
+            $guideLink = $_POST['guide-link'][$guideID];
+            if ($guideLink != "") {
+                $guideDifficulty = $_POST['difficulty'][$guideID];
+                $guideHours = $_POST['hours'][$guideID];
+    
+                if ($guideDifficulty == "") {
+                    $guideDifficulty = "null";
+                }
+                if ($guideHours == "") {
+                    $guideHours = "null";
+                }
+
+                if ($guidesValid == true) {
+                    $guidesSQL .= ", ";
+                }
+                $guidesValid = true;
+                $guidesSQL .= "($gameID, '$guideLink', $guideDifficulty, $guideHours)";
+            }
+        }
+        $guidesSQL .= ";";
+        if ($guidesValid == true) {
+            $mysqli->query($guidesSQL);
+        }
+
+        $cexValid = true;
+        $ids = array();
+        $platforms = array();
+        for ($cexID = 0; $cexID < count($_POST['cex-link']); $cexID++) {
+            $id = explode("&", explode("id=", $_POST['cex-link'][$cexID])[1])[0];
+            $platform = explode("playstation", $_POST['cex-link'][$cexID])[1][0];
+            if (in_array($id, $ids)) {
+                $cexValid = false;
+            } else {
+                array_push($platforms, $platform);
+                array_push($ids, $id);
+            }
+        }
+        if ($cexValid == true) {
+            $cexSQL = "INSERT INTO gamecex (gameID, id, platformID, cash, voucher) VALUES ";
+            $cexValid = false;
+            for ($cexID = 0; $cexID < count($_POST['cex-link']); $cexID++) {
+                $cexID = $ids[$cexID];
+                $cexPlatform = $platforms[$cexID];
+                $cexCash = $_POST['cex-cash'][$cexID];
+                $cexVoucher = $_POST['cex-voucher'][$cexID];
+                if ($cexID != "" && $cexPlatform != "" && $cexCash != "" && $cexVoucher != "") {
+                    if ($cexValid == true) {
+                        $cexSQL .= ", ";
+                    }
+                    $cexValid = true;
+                    $cexSQL .= "($gameID, $cexID, $cexPlatform, $cexCash, $cexVoucher)";
+                }
+            }
+            $cexSQL .= ";";
+            if ($cexValid == true) {
+                $mysqli->query($cexSQL);
+            }
+        } else {
+            array_push($errors, "CEX links have duplicate platforms");
+        }
+
         if (!isset($_POST['stay'])) {
             header("Location: ../games.php");
         }
@@ -65,17 +128,6 @@ if (isset($_POST['game-name'])) {
                     <div class="cex-section">
                         <label for="cex-link">Link</label>
                         <input type="text" name="cex-link[]" id="cex-link">
-                        <label for="cex-platform">Platform</label>
-                        <select name="platform[]" id="cex-platform">
-                        <?php
-                            $platformsQuery = $mysqli->query("SELECT * FROM gameplatforms");
-                            $index = 0;
-                            while ($platform = $platformsQuery->fetch_object()) {
-                                echo "<option value='$index'>$platform->platformName</option>";
-                                $index++;
-                            }
-                        ?>
-                        </select>
                         <label for="cash">Cash</label>
                         <input type="text" name="cash[]" id="cash">
                         <label for="voucher">Voucher</label>
@@ -91,7 +143,7 @@ if (isset($_POST['game-name'])) {
                         <label for="psnp-link">Link</label>
                         <input type="text" name="psnp-link[]" id="psnp-link">
                         <label for="psnp-platform">Platform</label>
-                        <select name="platform[]" id="psnp-platform">
+                        <select name="psnp-platform[]" id="psnp-platform">
                         <?php
                             $platformsQuery = $mysqli->query("SELECT * FROM gameplatforms");
                             $index = 0;
@@ -114,7 +166,7 @@ if (isset($_POST['game-name'])) {
                 
                 <label for="stay">Keep Adding</label>
                 <input type="checkbox" name="stay" id="stay" <?php if (isset($_POST['stay'])) { echo "checked"; } ?>>
-                <button>Register</button>
+                <button name="register">Register</button>
 
                 <?php
                 if (count($errors) > 0) {

@@ -83,7 +83,7 @@ include_once("includes/setup.php");
                         $games = $mysqli->query("SELECT * FROM Games ORDER BY gameName ASC");
                         while ($game = $games->fetch_object()) {
                             echo "<tr><td>$game->gameName</td>";
-                            $amount = mysqli_num_rows($mysqli->query("SELECT * FROM Games, GameGuides WHERE Games.gameID = GameGuides.gameID"));
+                            $amount = mysqli_num_rows($mysqli->query("SELECT * FROM GameGuides WHERE GameGuides.gameID = $game->gameID"));
                             echo "<td>$amount</td>";
                             $amount = mysqli_num_rows($mysqli->query("SELECT * FROM Games, GameInLibrary WHERE Games.gameID = GameInLibrary.gameID"));
                             echo "<td>$amount</td><td>Add To Library</td>";
