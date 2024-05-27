@@ -55,6 +55,7 @@ if (isset($_POST['game-name'])) {
                         <input type="text" name="difficulty[]" id="difficulty">
                         <label for="hours">Hours</label>
                         <input type="text" name="hours[]" id="hours">
+                        <img src="../images/Red-Circle-Transparent.png" alt="Img" style="width: 15px; height: 15px; display: none;" class="remove guide-remove">
                     </div>
                 </div>
                 <p class="add-new-guide">+ Add New</p>
@@ -79,6 +80,7 @@ if (isset($_POST['game-name'])) {
                         <input type="text" name="cash[]" id="cash">
                         <label for="voucher">Voucher</label>
                         <input type="text" name="voucher[]" id="voucher">
+                        <img src="../images/Red-Circle-Transparent.png" alt="Img" style="width: 15px; height: 15px; display: none;" class="remove cex-remove">
                     </div>
                 </div>
                 <p class="add-new-cex">+ Add New</p>
@@ -105,6 +107,7 @@ if (isset($_POST['game-name'])) {
                         <input type="text" name="psnp[]" id="psnp">
                         <label for="attainable">Attainable</label>
                         <input type="checkbox" name="attainable[]" id="attainable">
+                        <img src="../images/Red-Circle-Transparent.png" alt="Img" style="width: 15px; height: 15px; display: none;" class="remove psnp-remove">
                     </div>
                 </div>
                 <p class="add-new-psnp">+ Add New</p>

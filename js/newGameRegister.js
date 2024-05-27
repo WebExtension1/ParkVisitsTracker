@@ -1,53 +1,54 @@
-newGuide = document.querySelector(".add-new-guide");
-newCEX = document.querySelector(".add-new-cex");
-newPSNP = document.querySelector(".add-new-psnp");
+SetupSection("guide");
+SetupSection("cex");
+SetupSection("psnp");
 
-newGuide.addEventListener("click", function() {
-    newSection = document.querySelector(".guide-section").cloneNode(true);
-    document.querySelector(".guide-sections").appendChild(newSection);
-    children = newSection.children;
-    children[1].value = "";
-    children[3].value = "";
-    children[5].value = "";
-})
-
-newCEX.addEventListener("click", function() {
-    sectionContainer = document.querySelector(".cex-sections");
-    section = document.querySelector(".cex-section");
-    sectionChildren = section.children;
-    max = sectionChildren[3].childElementCount;
-
-    if (sectionContainer.childElementCount < max) {
-        newSection = section.cloneNode(true);
+function SetupSection(sectionName) {
+    document.querySelector(".add-new-" + sectionName).addEventListener("click", function() {
+        sectionContainer = document.querySelector("." + sectionName + "-sections");
+        newSection = document.querySelector("." + sectionName + "-section").cloneNode(true);
         sectionContainer.appendChild(newSection);
         children = newSection.children;
-        children[1].value = "";
-        children[3].value = 0;
-        children[5].value = "";
-        children[7].value = "";
-    }
-    if (sectionContainer.childElementCount == max) {
-        newCEX.style.display = "none";
-    }
-})
+        resetValues(children);
 
-newPSNP.addEventListener("click", function() {
-    sectionContainer = document.querySelector(".psnp-sections");
-    section = document.querySelector(".psnp-section");
-    sectionChildren = section.children;
-    max = sectionChildren[3].childElementCount;
+        removeButtons = document.querySelectorAll("." + sectionName + "-remove");
+        for (let i = 0; i < removeButtons.length; i++) {
+            removeButtons[i].style.display = "inline";
+        }
 
-    if (sectionContainer.childElementCount < max) {
-        newSection = section.cloneNode(true);
-        sectionContainer.appendChild(newSection);
-        children = newSection.children;
-        children[1].value = "";
-        children[3].value = 0;
-        children[5].value = "";
-        children[7].value = "";
-        children[9].checked = false;
+        children[children.length - 1].addEventListener("click", function (event) {
+            removeButton(event.target, sectionName);
+        })
+        
+        if (sectionContainer.childElementCount == 8) {
+            document.querySelector(".add-new-" + sectionName).style.display = "none";
+        }
+    })
+}
+
+removeButtons = document.querySelectorAll(".remove");
+for (let i = 0; i < 3; i++) {
+    removeButtons[i].addEventListener("click", function(event) {
+        removeButton(event.target, "");
+    });
+}
+
+function removeButton(caller, section) {
+    caller.parentNode.remove();
+    if (section != "") {
+        remaining = document.querySelectorAll("." + section + "-section");
+        if (remaining.length == 1) {
+            remainingChildren = remaining[0].children;
+            remainingChildren[remainingChildren.length - 1].style.display = "none";
+        }
     }
-    if (sectionContainer.childElementCount == max) {
-        newPSNP.style.display = "none";
+    document.querySelector(".add-new-" + section).style.display = "block";
+}
+
+function resetValues(children) {
+    for (i = 0; i < children.length; i++) {
+        if (children[i].type == "text") {
+            children[i].value = "";
+        }
+        children[i].checked = false;
     }
-})
+}
