@@ -16,15 +16,53 @@ include_once("includes/setup.php");
     include_once("includes/header.php");
     if (isset($_GET['game'])) {
         $gameName = $_GET['game'];
-        $gameQuery = $mysqli->query("SELECT gameID FROM Games WHERE gameName = '$gameName'");
-        if (mysqli_num_rows($gameQuery) > 0) {
+        $gameName = str_replace("'", "''", $gameName);
+        $gameQuery = $mysqli->query("SELECT * FROM Games WHERE gameName = '$gameName'");
+        if (mysqli_num_rows($gameQuery) == 1) {
             // Game Details Page
+            $game = $gameQuery->fetch_object();
+            echo "<h1>$game->gameName</h1>";
+            ?>
+                <?php
+                $guides = $mysqli->query("SELECT * FROM GameGuides WHERE gameID = $game->gameID");
+                if (mysqli_num_rows($guides) > 1) {
+                    echo "<div class='guides'><h2>Guides</h2>";
+                } else if (mysqli_num_rows($guides) == 1) {
+                    echo "<div class='guides'><h2>Guide</h2>";
+                } else {
+                    echo "<div class='guides'><h3>No guides found</h3>";
+                }
+                if (mysqli_num_rows($guides) > 0) {
+                    while ($guide = $guides->fetch_object()) {
+                        $url = str_replace("www.", "", $guide->link);
+                        $url = explode("://", $url)[1];
+                        $url = explode(".", $url)[0];
+                        echo "<p><a href='$guide->link' target='_blank'>$url</a></p>";
+                    }
+                    echo "</div>";
+                }
+
+                $platforms = $mysqli->query("SELECT * FROM gamePlatforms WHERE platformID IN (SELECT platformID FROM gameCEX WHERE gameID = $game->gameID) OR platformID IN (SELECT platformID FROM gamePSNP WHERE gameID = $game->gameID)");
+                if (mysqli_num_rows($platforms) > 1) {
+                    echo "<div class='platforms'><h2>Platforms</h2></div>";
+                } else if (mysqli_num_rows($platforms) == 1) {
+                    echo "<div class='platforms'><h2>Platform</h2></div>";
+                } else {
+                    echo "<div class='platforms'><h3>No external information linked</h3></div>";
+                }
+                if (mysqli_num_rows($platforms) > 0) {
+                    while ($platform = $platforms->fetch_object()) {
+                        echo "<p>$platform->platformName</p>";
+                    }
+                }
+                ?>
+            <?php
         } else {
             // Invalid Name
             echo "<p>Game not found!</p>";
         }
     } else {
-        // Game Overview Page
+        // Game Overview Pages
         ?>
         <div class="games-view-option">
             <p class="games-view-option-1" style="background-color: gray;">View Games In Library</p>
@@ -47,7 +85,8 @@ include_once("includes/setup.php");
                     <?php
                         $games = $mysqli->query("SELECT * FROM GameInLibrary, Games, GamePlatforms WHERE Games.gameID = GameInLibrary.gameID AND GameInLibrary.platformID = GamePlatforms.platformID ORDER BY gameName ASC");
                         while ($game = $games->fetch_object()) {
-                            echo "<tr><td>$game->gameName</td><td>$game->platformName</td>";
+                            $gameName = str_replace(" ", "+", $game->gameName);
+                            echo "<tr><td><a href=\"game/$gameName\">$game->gameName</a></td><td>$game->platformName</td>";
                             $percentages = $mysqli->query("SELECT * FROM GamePSNP, GamePlatforms WHERE GamePSNP.gameID = $game->gameID AND GamePSNP.platformID = GamePlatforms.platformID");
                             if (mysqli_num_rows($percentages) > 0) {
                                 $percentage = $percentages->fetch_object();
@@ -82,12 +121,12 @@ include_once("includes/setup.php");
                     <?php
                         $games = $mysqli->query("SELECT * FROM Games ORDER BY gameName ASC");
                         while ($game = $games->fetch_object()) {
-                            echo "<tr><td>$game->gameName</td>";
+                            $gameName = str_replace(" ", "+", $game->gameName);
+                            echo "<tr><td><a href=\"game/$gameName\">$game->gameName</a></td>";
                             $amount = mysqli_num_rows($mysqli->query("SELECT * FROM GameGuides WHERE GameGuides.gameID = $game->gameID"));
                             echo "<td>$amount</td>";
                             $amount = mysqli_num_rows($mysqli->query("SELECT * FROM Games, GameInLibrary WHERE Games.gameID = GameInLibrary.gameID"));
                             echo "<td>$amount</td><td><a href=''>Add To Library</a></td>";
-                            $gameName = str_replace(" ", "+", $game->gameName);
                             echo "<td><a href=\"edit-game/$gameName\">Edit</a></td>";
                             echo "</tr>";
                         }
