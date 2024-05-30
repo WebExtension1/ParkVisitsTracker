@@ -50,7 +50,7 @@ if (isset($_POST['register'])) {
         for ($cexID = 0; $cexID < count($_POST['cex-link']); $cexID++) {
             $id = explode("&", explode("id=", $_POST['cex-link'][$cexID])[1])[0];
             $platform = explode("playstation", $_POST['cex-link'][$cexID])[1][0];
-            if (in_array($id, $ids)) {
+            if (in_array($id, $ids) || in_array($platform, $platforms)) {
                 $cexValid = false;
             } else {
                 array_push($platforms, $platform);
@@ -60,11 +60,11 @@ if (isset($_POST['register'])) {
         if ($cexValid == true) {
             $cexSQL = "INSERT INTO gamecex (gameID, id, platformID, cash, voucher) VALUES ";
             $cexValid = false;
-            for ($cexID = 0; $cexID < count($_POST['cex-link']); $cexID++) {
-                $cexID = $ids[$cexID];
-                $cexPlatform = $platforms[$cexID];
-                $cexCash = $_POST['cex-cash'][$cexID];
-                $cexVoucher = $_POST['cex-voucher'][$cexID];
+            for ($cexLoop = 0; $cexLoop < count($_POST['cex-link']); $cexLoop++) {
+                $cexID = $ids[$cexLoop];
+                $cexPlatform = $platforms[$cexLoop];
+                $cexCash = $_POST['cash'][$cexLoop];
+                $cexVoucher = $_POST['voucher'][$cexLoop];
                 if ($cexID != "" && $cexPlatform != "" && $cexCash != "" && $cexVoucher != "") {
                     if ($cexValid == true) {
                         $cexSQL .= ", ";
@@ -79,6 +79,53 @@ if (isset($_POST['register'])) {
             }
         } else {
             array_push($errors, "CEX links have duplicate platforms");
+        }
+
+        $psnpValid = true;
+        $ids = array();
+        $platforms = array();
+        for ($psnpID = 0; $psnpID < count($_POST['psnp-link']); $psnpID++) {
+            $id = explode("-", explode("trophies/", $_post['psnp-link'][$psnpID])[1])[0];
+            $platform = $_POST['psnp-platform'][$psnpID];
+            if (in_array($id, $ids) || in_array($platform, $platforms)) {
+                $psnpValid = false;
+            } else {
+                array_push($platforms, $platform);
+                array_push($ids, $id);
+            }
+        }
+        if ($psnpValid == true) {
+            $psnpSQL = "INSERT INTO gamepsnp (gameID, id, PSN, PSNP, hasPlatinum, attainable, platformID) VALUES ";
+            $psnpValid = false;
+            for ($psnpLoop = 0; $psnpLoop < count($_POST['psnp-link']); $psnpLoop++) {
+                $psnpID = $ids[$psnpLoop];
+                $psn = $_POST['psn'][$psnpLoop];
+                $psnp = $_POST['psnp'][$psnpLoop];
+                if (isset($_POST['platinum'][$psnpLoop])) {
+                    $hasPlatinum = 1;
+                } else {
+                    $hasPlatinum = 0;
+                }
+                if (isset($_POST['attainable'][$psnpLoop])) {
+                    $attainable = 1;
+                } else {
+                    $attainable = 0;
+                }
+                $platform = $platforms[$psnpLoop];
+                if ($psnpID != "" && $psn != "" && $psnp != "") {
+                    if ($psnpValid == true) {
+                        $psnpSQL .= "," ;
+                    }
+                    $psnpValid = true;
+                    $psnpSQL .= "($gameID, $psnpID, $psn, $psnp, $hasPlatinum, $attainable, $platform)";
+                }
+            }
+            $psnpSQL .= ";";
+            if ($psnpValid == true) {
+                $mysqli->query($psnpSQL);
+            }
+        } else {
+            array_push($errors, "PSNP links have duplicate platforms");
         }
 
         if (!isset($_POST['stay'])) {
@@ -157,6 +204,8 @@ if (isset($_POST['register'])) {
                         <input type="text" name="psn[]" id="psn">
                         <label for="psnp">PSNP %</label>
                         <input type="text" name="psnp[]" id="psnp">
+                        <label for="platinum">Platinum</label>
+                        <input type="checkbox" name="platinum[]" id="platinum">
                         <label for="attainable">Attainable</label>
                         <input type="checkbox" name="attainable[]" id="attainable">
                         <img src="../images/Red-Circle-Transparent.png" alt="Img" style="width: 15px; height: 15px; display: none;" class="remove psnp-remove">

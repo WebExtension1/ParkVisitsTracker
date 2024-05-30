@@ -164,12 +164,13 @@ INSERT INTO `gameplatforms`(`platformName`) VALUES
 ("PSVR"),
 ("PSVR2");
 
-CREATE TABLE If Not Exists GamePercentages (
+CREATE TABLE If Not Exists GamePSNP (
     gameID int NOT NULL,
-    link text NOT NULL,
+    id int NOT NULL,
     PSN float NOT NULL,
     PSNP float NOT NULL,
     hasPlatinum tinyint NOT NULL,
+    attainable tinyint NOT NULL,
     platformID int NOT NULL,
     FOREIGN KEY (gameID) REFERENCES Games (gameID),
     FOREIGN KEY (platformID) REFERENCES GamePlatforms (platformID)
@@ -200,7 +201,6 @@ CREATE TABLE If Not Exists GameGuides (
     link text,
     difficulty int NOT NULL,
     hours int NOT NULL,
-    attainable tinyint,
     FOREIGN KEY (gameID) REFERENCES Games (gameID)
 );
 

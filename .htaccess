@@ -18,3 +18,5 @@ RewriteRule ^games game.php [NC,l]
 RewriteRule ^new-game/(.*) new-game.php?type=$1 [NC,l]
 
 RewriteRule ^new-game new-game.php [NC,l]
+
+RewriteRule ^edit-game/(.*) edit-game.php?gameName=$1 [NC,l]

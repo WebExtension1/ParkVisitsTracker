@@ -27,8 +27,8 @@ include_once("includes/setup.php");
         // Game Overview Page
         ?>
         <div class="games-view-option">
-            <p class="games-view-option-1">View Games In Library</p>
-            <p class="games-view-option-2">View All Games</p>
+            <p class="games-view-option-1" style="background-color: gray;">View Games In Library</p>
+            <p class="games-view-option-2" style="background-color: lightgray;">View All Games</p>
         </div>
         <div class="games-in-library">
             <a href="new-game/library">Add Game</a>
@@ -48,7 +48,7 @@ include_once("includes/setup.php");
                         $games = $mysqli->query("SELECT * FROM GameInLibrary, Games, GamePlatforms WHERE Games.gameID = GameInLibrary.gameID AND GameInLibrary.platformID = GamePlatforms.platformID ORDER BY gameName ASC");
                         while ($game = $games->fetch_object()) {
                             echo "<tr><td>$game->gameName</td><td>$game->platformName</td>";
-                            $percentages = $mysqli->query("SELECT * FROM GamePercentages, GamePlatforms WHERE GamePercentages.gameID = $game->gameID AND GamePercentages.platformID = GamePlatforms.platformID");
+                            $percentages = $mysqli->query("SELECT * FROM GamePSNP, GamePlatforms WHERE GamePSNP.gameID = $game->gameID AND GamePSNP.platformID = GamePlatforms.platformID");
                             if (mysqli_num_rows($percentages) > 0) {
                                 $percentage = $percentages->fetch_object();
                                 echo "<td>$percentage->PSNP</td><td>$percentage->PSN</td>";
@@ -86,7 +86,9 @@ include_once("includes/setup.php");
                             $amount = mysqli_num_rows($mysqli->query("SELECT * FROM GameGuides WHERE GameGuides.gameID = $game->gameID"));
                             echo "<td>$amount</td>";
                             $amount = mysqli_num_rows($mysqli->query("SELECT * FROM Games, GameInLibrary WHERE Games.gameID = GameInLibrary.gameID"));
-                            echo "<td>$amount</td><td>Add To Library</td>";
+                            echo "<td>$amount</td><td><a href=''>Add To Library</a></td>";
+                            $gameName = str_replace(" ", "+", $game->gameName);
+                            echo "<td><a href=\"edit-game/$gameName\">Edit</a></td>";
                             echo "</tr>";
                         }
                     ?>
