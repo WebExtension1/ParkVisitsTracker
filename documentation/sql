@@ -155,6 +155,11 @@ CREATE TABLE If Not Exists GamePlatforms (
     PRIMARY KEY (platformID ASC)
 );
 INSERT INTO `gameplatforms`(`platformName`) VALUES
+("Wii"),
+("Xbox 360"),
+("Xbox One"),
+("Xbox Series X"),
+("PC"),
 ("Playstation 1"),
 ("Playstation 2"),
 ("Playstation 3"),
@@ -184,7 +189,7 @@ CREATE TABLE If Not Exists GameFormats (
 INSERT INTO `gameformats`(`formatName`) VALUES
 ("Physical"),
 ("Digital"),
-("Playstation Plus");
+("Subscription");
 
 CREATE TABLE If Not Exists GameCEX (
     gameID int NOT NULL,
@@ -250,6 +255,10 @@ CREATE TABLE If Not Exists GameWishlist (
     FOREIGN KEY (platformID) REFERENCES GamePlatforms (platformID),
     FOREIGN KEY (formatID) REFERENCES GameFormats (formatID),
     FOREIGN KEY (userID) REFERENCES Users (userID)
+);
+
+CREATE TABLE If Not Exists GameSuggestions (
+    name text NOT NULL
 );
 
 /* Concerts */

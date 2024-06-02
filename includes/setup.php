@@ -17,12 +17,12 @@ if (str_contains($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], "index.php")) 
 if ($currentPage != "login.php" && $currentPage != "signup.php") {  //List of pages that are exempt
     if (isset($_SESSION['userID'])) {
         $signedInUser = $mysqli->query("SELECT * FROM users WHERE userID = " . $_SESSION['userID'])->fetch_object();
-    } else {
+    } else if ($currentPage != "game.php" ) {
         header("Location: login.php");
     }
 }
 
-if (($currentPage == "game.php" || $currentPage == "new-game.php") && ($signedInUser->username != "WebExtension" && $signedInUser->username != "ImKelton" && $signedInUser->username != "KeithJenner" && $signedInUser->username != "PamJenner")) {
+if (($currentPage == "new-game.php") && ($signedInUser->username != "WebExtension" && $signedInUser->username != "ImKelton" && $signedInUser->username != "KeithJenner" && $signedInUser->username != "PamJenner")) {
     header("Location: index.php");
 }
 ?>
