@@ -1,21 +1,5 @@
 <?php
 include_once("includes/setup.php");
-
-if (isset($_POST['suggestGame'])) {
-    $existsQuery = $mysqli->prepare("SELECT * FROM gameSuggestions WHERE name = ?");
-    $existsQuery->bind_param("s", $_POST['gameName']);
-    $existsQuery->execute();
-    $exists = $existsQuery->get_result();
-
-    if (mysqli_num_rows($exists) == 0) {
-        $suggestionQuery = $mysqli->prepare("INSERT INTO gameSuggestions (name) VALUES (?)");
-        $suggestionQuery->bind_param("s", $_POST['gameName']);
-        $suggestionQuery->execute();
-        $exists = false;
-    } else {
-        $exists = true;
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,37 +31,43 @@ if (isset($_POST['suggestGame'])) {
                 // Game Details Page
                 $game = $gameQuery->fetch_object();
                 echo "<h1>$game->gameName</h1>";
-                    $guides = $mysqli->query("SELECT * FROM GameGuides WHERE gameID = $game->gameID");
-                    if (mysqli_num_rows($guides) > 1) {
-                        echo "<div class='guides'><h2>Guides</h2>";
-                    } else if (mysqli_num_rows($guides) == 1) {
-                        echo "<div class='guides'><h2>Guide</h2>";
-                    } else {
-                        echo "<div class='guides'><h3>No guides found</h3>";
+
+                $guides = $mysqli->query("SELECT * FROM GameGuides WHERE gameID = $game->gameID");
+                echo "<div class='guides'>";
+                if (mysqli_num_rows($guides) > 0) {
+                    echo "<h2>Guides</h2>";
+                } else {
+                    echo "<h3>No guides found</h3>";
+                }
+                if (mysqli_num_rows($guides) > 0) {
+                    while ($guide = $guides->fetch_object()) {
+                        $url = str_replace("www.", "", $guide->link);
+                        $url = explode("://", $url)[1];
+                        $url = explode(".", $url)[0];
+                        echo "<p><a href='$guide->link' target='_blank'>$url</a></p>";
                     }
-                    if (mysqli_num_rows($guides) > 0) {
-                        while ($guide = $guides->fetch_object()) {
-                            $url = str_replace("www.", "", $guide->link);
-                            $url = explode("://", $url)[1];
-                            $url = explode(".", $url)[0];
-                            echo "<p><a href='$guide->link' target='_blank'>$url</a></p>";
-                        }
-                        echo "</div>";
-                    }
+                }
+                echo "</div>";
     
-                    $platforms = $mysqli->query("SELECT * FROM gamePlatforms WHERE platformID IN (SELECT platformID FROM gameCEX WHERE gameID = $game->gameID) OR platformID IN (SELECT platformID FROM gamePSNP WHERE gameID = $game->gameID)");
-                    if (mysqli_num_rows($platforms) > 1) {
-                        echo "<div class='platforms'><h2>Platforms</h2></div>";
-                    } else if (mysqli_num_rows($platforms) == 1) {
-                        echo "<div class='platforms'><h2>Platform</h2></div>";
-                    } else {
-                        echo "<div class='platforms'><h3>No external information linked</h3></div>";
-                    }
-                    if (mysqli_num_rows($platforms) > 0) {
-                        while ($platform = $platforms->fetch_object()) {
-                            echo "<p>$platform->platformName</p>";
+                $cexs = $mysqli->query("SELECT * FROM GameCEX, GamePlatforms WHERE gameID = $game->gameID AND GameCEX.platformID = GamePlatforms.platformID");
+                echo "<div class='cexs'>";
+                if (mysqli_num_rows($cexs) > 0) {
+                    echo "<h2>CEXs</h2>";
+                } else {
+                    echo "<h3>No CEX links found</h3>";
+                }
+                if (mysqli_num_rows($cexs) > 0) {
+                    while ($cex = $cexs->fetch_object()) {
+                        $gameOwned = $mysqli->query("SELECT * FROM GameInLibrary WHERE gameID = $game->gameID AND platformID = $cex->platformID");
+                        $platform = str_replace(" ", "", $cex->platformName);
+                        if (mysqli_num_rows($gameOwned) > 0) {
+                            $extension = "sell/product-detail?id=$cex->id&categoryName=$platform-games";
+                        } else {
+                            $extension = "product-detail?id=$cex->id&categoryName=$platform-games";
                         }
+                        echo "<p><a href='https://uk.webuy.com/$extension' target='_blank'>$cex->platformName</a></p>";
                     }
+                }
             } else {
                 // Invalid Name
                 echo "<p>Game not found!</p>";
@@ -105,7 +95,13 @@ if (isset($_POST['suggestGame'])) {
                     <tbody>
                         <?php
                             $games = $mysqli->query("SELECT * FROM GameInLibrary, Games, GamePlatforms WHERE Games.gameID = GameInLibrary.gameID AND GameInLibrary.platformID = GamePlatforms.platformID ORDER BY gameName ASC");
+                            $iteration = 1;
                             while ($game = $games->fetch_object()) {
+                                if ($iteration == 11) {
+                                    echo "
+                                    <button>Load More</button>
+                                    <div>";
+                                }
                                 $gameName = str_replace(" ", "+", $game->gameName);
                                 echo "<tr><td><a href=\"game/$gameName\">$game->gameName</a></td><td>$game->platformName</td>";
                                 $percentages = $mysqli->query("SELECT * FROM GamePSNP, GamePlatforms WHERE GamePSNP.gameID = $game->gameID AND GamePSNP.platformID = GamePlatforms.platformID");
@@ -123,6 +119,10 @@ if (isset($_POST['suggestGame'])) {
                                     echo "<td></td><td></td>";
                                 }
                                 echo "</tr>";
+                                $iteration++;
+                            }
+                            if ($iteration > 10) {
+                                echo "</div>";
                             }
                         ?>
                     </tbody>
@@ -141,15 +141,25 @@ if (isset($_POST['suggestGame'])) {
                     <tbody>
                         <?php
                             $games = $mysqli->query("SELECT * FROM Games ORDER BY gameName ASC");
+                            $iteration = 1;
                             while ($game = $games->fetch_object()) {
+                                $hidden = "";
+                                if ($iteration == 11) {
+                                    echo "<tr class='load-more-all-games-row'><td><button class='load-more-all-games'>Load More</button></td></tr>";
+                                    $hidden = "style='display:none;' class='all-games-hidden'";
+                                }
                                 $gameName = str_replace(" ", "+", $game->gameName);
-                                echo "<tr><td><a href=\"game/$gameName\">$game->gameName</a></td>";
+                                echo "<tr $hidden ><td><a href=\"game/$gameName\">$game->gameName</a></td>";
                                 $amount = mysqli_num_rows($mysqli->query("SELECT * FROM GameGuides WHERE GameGuides.gameID = $game->gameID"));
                                 echo "<td>$amount</td>";
                                 $amount = mysqli_num_rows($mysqli->query("SELECT * FROM Games, GameInLibrary WHERE Games.gameID = GameInLibrary.gameID"));
                                 echo "<td>$amount</td><td><a href=''>Add To Library</a></td>";
                                 echo "<td><a href=\"edit-game/$gameName\">Edit</a></td>";
                                 echo "</tr>";
+                                $iteration++;
+                            }
+                            if ($iteration > 10) {
+                                echo "</div>";
                             }
                         ?>
                     </tbody>
@@ -159,22 +169,6 @@ if (isset($_POST['suggestGame'])) {
         }
     } else {
         ?>
-        <form method='post'>
-            <h3>Enter a name to suggest a game!</h3>
-            <p>This can be something from the list below, or something else you'd like to see Melton play!</p>
-            <input type="text" name="gameName" required>
-            <button name="suggestGame">Suggest Game</button>
-            <?php
-                if (isset($_POST['suggestGame'])) {
-                    if ($exists == false) {
-                        $gameName = $_POST['gameName'];
-                        echo "<p>You have successfully suggested '$gameName'</p>";
-                    } else {
-                        echo "<p>This game has already been suggested!</p>";
-                    }
-                }
-            ?>
-        </form>
         <table>
             <thead>
                 <tr>

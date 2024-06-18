@@ -70,7 +70,7 @@ if (isset($_POST['register'])) {
                         $cexSQL .= ", ";
                     }
                     $cexValid = true;
-                    $cexSQL .= "($gameID, $cexID, $cexPlatform, $cexCash, $cexVoucher)";
+                    $cexSQL .= "($gameID, '$cexID', $cexPlatform, $cexCash, $cexVoucher)";
                 }
             }
             $cexSQL .= ";";
