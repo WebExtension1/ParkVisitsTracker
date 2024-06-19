@@ -2,7 +2,7 @@
 include_once("includes/setup.php");
 
 if (!isset($_COOKIE['selectedTab'])) {
-    $_COOKIE['selectedTab'] = "left";
+    setcookie("selectedTab", "left");
 }
 ?>
 <!DOCTYPE html>
@@ -80,8 +80,8 @@ if (!isset($_COOKIE['selectedTab'])) {
             // Game Overview Pages
             ?>
             <div class="games-view-option">
-                <p class="games-view-option-1" onclick="left()" style="background-color: gray;">View Games In Library</p>
-                <p class="games-view-option-2" onclick="right()" style="background-color: lightgray;">View All Games</p>
+                <p class="games-view-option-1" onclick="left()">View Games In Library</p>
+                <p class="games-view-option-2" onclick="right()">View All Games</p>
             </div>
             <div class="games-in-library">
                 <a href="new-game/library">Add Game</a>
