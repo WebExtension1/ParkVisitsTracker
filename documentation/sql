@@ -658,3 +658,106 @@ CREATE TABLE If Not Exists AttractionReplacement (
     FOREIGN KEY (oldAttraction) REFERENCES Attractions (attractionID),
     FOREIGN KEY (newAttraction) REFERENCES Attractions (attractionID)
 );
+
+/* Discography */
+
+CREATE TABLE If Not Exists DiscographyBands (
+    bandID int NOT NULL AUTO_INCREMENT,
+    bandName text NOT NULL,
+    PRIMARY KEY (bandID ASC)
+);
+
+CREATE TABLE If Not Exists DiscographySongs (
+    songID int NOT NULL AUTO_INCREMENT,
+    bandID int NOT NULL,
+    songName text NOT NULL,
+    PRIMARY KEY (songID ASC),
+    FOREIGN KEY (bandID) REFERENCES DiscographyBands (bandID)
+);
+
+CREATE TABLE If Not Exists DiscographyCovers (
+    songID int NOT NULL,
+    originalArtist text NOT NULL,
+    FOREIGN KEY (songID) REFERENCES DiscographySongs (songID)
+);
+
+CREATE TABLE If Not Exists DiscographyReleaseTypes (
+    releaseTypeID int NOT NULL AUTO_INCREMENT,
+    releaseTypeName text NOT NULL,
+    PRIMARY KEY (releaseTypeID ASC)
+);
+INSERT INTO DiscographyReleaseTypes (releaseTypeID) VALUES
+("Album"),
+("EP"),
+("Single");
+
+CREATE TABLE If Not EXISTS DiscographyAlbums (
+    albumID int NOT NULL AUTO_INCREMENT,
+    albumName text NOT NULL,
+    bandID int NOT NULL,
+    releaseTypeID int NOT NULL,
+    PRIMARY KEY (albumID ASC),
+    FOREIGN KEY (bandID) REFERENCES DiscographyBands (bandID),
+    FOREIGN KEY (releaseTypeID) REFERENCES DiscographyReleaseTypes (releaseTypeID)
+);
+
+CREATE TABLE If Not Exists DiscographyTypes (
+    typeID int NOT NULL AUTO_INCREMENT,
+    typeName text NOT NULL,
+    PRIMARY KEY (typeID ASC)
+);
+INSERT INTO DiscographyTypes (typeName) VALUES
+("Studio"),
+("Acoustic"),
+("Full Band"),
+("Other"),
+("Cover"),
+("Demo"),
+("Concert"),
+("Live");
+
+CREATE TABLE If Not Exists DiscographyVersions (
+    versionID int NOT NULL AUTO_INCREMENT,
+    songID int NOT NULL,
+    PRIMARY KEY (versionID ASC),
+    FOREIGN KEY (songID) REFERENCES DiscographySongs (songID)
+);
+
+CREATE TABLE If Not Exists DiscographyMediaTypes (
+    mediaTypeID int NOT NULL AUTO_INCREMENT,
+    mediaTypeName text NOT NULL,
+    PRIMARY KEY (mediaTypeID ASC)
+);
+INSERT INTO DiscographyMediaTypes (mediaTypeName) VALUES
+("Audio"),
+("Music Video"),
+("Performance Video");
+
+CREATE TABLE If Not Exists DiscographyReleases (
+    releaseID int NOT NULL AUTO_INCREMENT,
+    versionID int NOT NULL,
+    mediaTypeID int NOT NULL,
+    link text NOT NULL,
+    official tinyint NOT NULL,
+    year int NOT NULL,
+    month int NOT NULL,
+    day int NOT NULL,
+    PRIMARY KEY (releaseID ASC),
+    FOREIGN KEY (versionID) REFERENCES DiscographyVersions (versionID),
+    FOREIGN KEY (mediaTypeID) REFERENCES DiscographyMediaTypes (mediaTypeID)
+);
+
+CREATE TABLE If Not Exists DiscographyReleaseAlbums (
+    releaseID int NOT NULL,
+    albumID int NOT NULL,
+    primaryRelease tinyint NOT NULL,
+    FOREIGN KEY (releaseID) REFERENCES DiscographyReleases (releaseID),
+    FOREIGN KEY (albumID) REFERENCES DiscographyAlbums (albumID)
+);
+
+CREATE TABLE If Not Exists DiscographyVersionTypes (
+    versionID int NOT NULL,
+    typeID int NOT NULL,
+    FOREIGN KEY (versionID) REFERENCES DiscographyVersions (versionID),
+    FOREIGN KEY (typeID) REFERENCES DiscographyTypes (typeID)
+);
