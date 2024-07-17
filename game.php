@@ -157,7 +157,7 @@ if (!isset($_COOKIE['selectedTab'])) {
                                 $amount = mysqli_num_rows($mysqli->query("SELECT * FROM GameGuides WHERE GameGuides.gameID = $game->gameID"));
                                 echo "<td>$amount</td>";
                                 $amount = mysqli_num_rows($mysqli->query("SELECT * FROM Games, GameInLibrary WHERE Games.gameID = GameInLibrary.gameID"));
-                                echo "<td>$amount</td><td><a href=''>Add To Library</a></td>";
+                                echo "<td>$amount</td><td><a href='new-game/library/$game->gameID'>Add To Library</a></td>";
                                 echo "<td><a href=\"edit-game/$gameName\">Edit</a></td>";
                                 echo "</tr>";
                                 $iteration++;

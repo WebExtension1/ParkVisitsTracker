@@ -15,10 +15,16 @@ RewriteRule ^game game.php [NC,l]
 
 RewriteRule ^games game.php [NC,l]
 
-RewriteRule ^new-game/(.*) new-game.php?type=$1 [NC,l]
+RewriteRule ^new-game/library/([0-9]+) new-game.php?id=$1 [NC,l]
 
-RewriteRule ^new-game new-game.php [NC,l]
+RewriteRule ^new-game/(.*) new-game.php?type=$1 [NC,l]
 
 RewriteRule ^edit-game/(.*) edit-game.php?gameName=$1 [NC,l]
 
 RewriteRule ^logout logout.php [NC,l]
+
+RewriteRule ^discography discography.php [NC,l]
+
+RewriteRule ^discographies discography.php [NC,l]
+
+RewriteRule ^rides rides.php [NC,l]

@@ -15,8 +15,8 @@ include_once("includes/setup.php");
     include_once("includes/header.php");
     if (isset($_GET['gameName'])) {
         $gameName =  $_GET['gameName'];
-        $gameName = str_replace("'", "''", $gameName);
-        $gameToEditQuery = $mysqli->query("SELECT * FROM Games WHERE gameName = '$gameName'");
+        $gameNameSearch = str_replace("'", "''", $gameName);
+        $gameToEditQuery = $mysqli->query("SELECT * FROM Games WHERE gameName = '$gameNameSearch'");
         if (mysqli_num_rows($gameToEditQuery) > 0) {
             $gameToEdit = $gameToEditQuery->fetch_object();
             echo "<h1>$gameName</h1>";

@@ -3,6 +3,8 @@ include_once("includes/setup.php");
 
 $errors = array();
 
+$library = false;
+
 if (isset($_POST['register'])) {
     $gameNameExistsQuery = $mysqli->prepare("SELECT * FROM games WHERE gameName = ?");
     $gameNameExistsQuery->bind_param('s', $_POST['game-name']);
@@ -133,6 +135,26 @@ if (isset($_POST['register'])) {
         }
     }
 }
+
+if (isset($_POST['add-to-library'])) {
+    if ($_POST['gameName'] != 0) {
+        $game = $_POST['gameName'];
+        $platform = $_POST['gamePlatform'];
+        $format = $_POST['gameFormat'];
+        $owner = $_POST['gameOwner'];
+        $libraryGame = $mysqli->prepare("INSERT INTO gameInLibrary (gameID, platformID, formatID, owner) VALUES (?, ?, ?, ?)");
+        $libraryGame->bind_param("ssss", $game, $platform, $format, $owner);
+        $libraryGame->execute();
+        if ($_POST['gameFormat'] == 1) {
+            $insertID = mysqli_insert_id($mysqli);
+            $holder = $_POST['gameHolder'];
+            $gameHolder = $mysqli->prepare("INSERT INTO physicalGameOwner VALUES (?, ?)");
+            $gameHolder->bind_param("ss", $insertID, $holder);
+            $gameHolder->execute();
+        }
+        header("Location: ../../../ParkVisitsTracker/game.php");
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -227,17 +249,77 @@ if (isset($_POST['register'])) {
             </form>
             <?php
         } else if ($type == "library") {
-            ?>
-            <h1>Add Game To Library</h1>
-            <form method="post">
-                
-            </form>
-            <?php
+            $library = true;
         } else {
-            echo "Wrong";
+            header("Location:../../../ParkVisitsTracker/games.php");
         }
-    } else {
-
+    } else if (isset($_GET['id'])) {
+        $id = $_GET['id'];
+        $gameFromID = $mysqli->query("SELECT * FROM games WHERE gameID = $id");
+        if (mysqli_num_rows($gameFromID) == 1 ) {
+            $gameToLibrary = $gameFromID->fetch_object();
+            $library = true;
+        } else {
+            header("Location:../../../ParkVisitsTracker/games.php");
+        }
+    }
+    if ($library == true) {
+        echo "<h1>Add Game To Library</h1>";
+        echo "<script src='../../../ParkVisitsTracker/js/newGameLibrary.js' defer></script>";
+        if (isset($gameToLibrary)) {
+            $gameName = $gameToLibrary->gameName;
+        } else {
+            $gameName = "";
+        }
+        ?>
+        <form method="post">
+            <label for='game-name'>Game</label>
+            <select name="gameName" id='game-name'>
+                <?php
+                $allGames = $mysqli->query("SELECT * FROM games");
+                echo "<option value='0'></option>";
+                while ($game = $allGames->fetch_object()) {
+                    $selected = "";
+                    if ($game->gameName == $gameName) {
+                        $selected = "selected";
+                    }
+                    echo "<option value='$game->gameID' $selected>$game->gameName</option>";
+                }
+                ?>
+            </select>
+            <label for="platform">Platform</label>
+            <select name="gamePlatform" id="platform">
+                <?php
+                $allPlatforms = $mysqli->query("SELECT * FROM gamePlatforms");
+                while ($platform = $allPlatforms->fetch_object()) {
+                    echo "<option value='$platform->platformID'>$platform->platformName</option>";
+                }
+                ?>
+            </select>
+            <label for="format">Format</label>
+            <select name="gameFormat" id="format">
+                <?php
+                $allFormats = $mysqli->query("SELECT * FROM gameFormats");
+                while ($format = $allFormats->fetch_object()) {
+                    echo "<option value='$format->formatID'>$format->formatName</option>";
+                }
+                ?>
+            </select>
+            <label for="owner">Owner</label>
+            <select name="gameOwner" id="owner">
+                <option value="1">Robert</option>
+                <option value="2">Kelton</option>
+            </select>
+            <div id='format-holder-div'>
+                <label for="holder">Holder</label>
+                <select name="gameHolder" id="holder">
+                    <option value="1">Robert</option>
+                    <option value="2">Kelton</option>
+                </select>
+            </div>
+            <button name='add-to-library'>Add to Library</button>
+        </form>
+        <?php
     }
     ?>
 </body>
