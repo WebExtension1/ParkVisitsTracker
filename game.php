@@ -100,14 +100,14 @@ if (!isset($_COOKIE['selectedTab'])) {
                         <?php
                             $games = $mysqli->query("SELECT * FROM GameInLibrary, Games, GamePlatforms WHERE Games.gameID = GameInLibrary.gameID AND GameInLibrary.platformID = GamePlatforms.platformID ORDER BY gameName ASC");
                             $iteration = 1;
+                            $hidden = "";
                             while ($game = $games->fetch_object()) {
                                 if ($iteration == 11) {
-                                    echo "
-                                    <button>Load More</button>
-                                    <div>";
+                                    echo "<tr class='load-more-all-games-row'><td><button class='load-more-all-games'>Load More</button></td></tr>";
+                                    $hidden = "style='display:none;' class='all-games-hidden'";
                                 }
                                 $gameName = str_replace(" ", "+", $game->gameName);
-                                echo "<tr><td><a href=\"game/$gameName\">$game->gameName</a></td><td>$game->platformName</td>";
+                                echo "<tr $hidden><td><a href=\"game/$gameName\">$game->gameName</a></td><td>$game->platformName</td>";
                                 $percentages = $mysqli->query("SELECT * FROM GamePSNP, GamePlatforms WHERE GamePSNP.gameID = $game->gameID AND GamePSNP.platformID = GamePlatforms.platformID");
                                 if (mysqli_num_rows($percentages) > 0) {
                                     $percentage = $percentages->fetch_object();
@@ -146,8 +146,8 @@ if (!isset($_COOKIE['selectedTab'])) {
                         <?php
                             $games = $mysqli->query("SELECT * FROM Games ORDER BY gameName ASC");
                             $iteration = 1;
+                            $hidden = "";
                             while ($game = $games->fetch_object()) {
-                                $hidden = "";
                                 if ($iteration == 11) {
                                     echo "<tr class='load-more-all-games-row'><td><button class='load-more-all-games'>Load More</button></td></tr>";
                                     $hidden = "style='display:none;' class='all-games-hidden'";
