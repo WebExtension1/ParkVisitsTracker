@@ -108,7 +108,7 @@ if (!isset($_COOKIE['selectedTab'])) {
                                 }
                                 $gameName = str_replace(" ", "+", $game->gameName);
                                 echo "<tr $hidden><td><a href=\"game/$gameName\">$game->gameName</a></td><td>$game->platformName</td>";
-                                $percentages = $mysqli->query("SELECT * FROM GamePSNP, GamePlatforms WHERE GamePSNP.gameID = $game->gameID AND GamePSNP.platformID = GamePlatforms.platformID");
+                                $percentages = $mysqli->query("SELECT GamePSNP.PSNP, GamePSNP.PSN FROM GamePSNP, GamePlatforms WHERE GamePSNP.gameID = $game->gameID");
                                 if (mysqli_num_rows($percentages) > 0) {
                                     $percentage = $percentages->fetch_object();
                                     echo "<td>$percentage->PSNP</td><td>$percentage->PSN</td>";

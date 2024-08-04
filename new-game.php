@@ -87,7 +87,7 @@ if (isset($_POST['register'])) {
         $ids = array();
         $platforms = array();
         for ($psnpID = 0; $psnpID < count($_POST['psnp-link']); $psnpID++) {
-            $id = explode("-", explode("trophies/", $_post['psnp-link'][$psnpID])[1])[0];
+            $id = explode("-", explode("trophies/", $_POST['psnp-link'][$psnpID])[1])[0];
             $platform = $_POST['psnp-platform'][$psnpID];
             if (in_array($id, $ids) || in_array($platform, $platforms)) {
                 $psnpValid = false;
@@ -121,6 +121,7 @@ if (isset($_POST['register'])) {
                     $psnpValid = true;
                     $psnpSQL .= "($gameID, $psnpID, $psn, $psnp, $hasPlatinum, $attainable, $platform)";
                 }
+                echo $psnpSQL;
             }
             $psnpSQL .= ";";
             if ($psnpValid == true) {
@@ -131,7 +132,7 @@ if (isset($_POST['register'])) {
         }
 
         if (!isset($_POST['stay'])) {
-            header("Location: ../games.php");
+            //header("Location: ../games.php");
         }
     }
 }
