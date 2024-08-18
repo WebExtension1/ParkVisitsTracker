@@ -15,6 +15,9 @@
             if ($signedInUser->username == "KeithJenner" || $signedInUser->username == "WebExtension") {
                 echo "<a href='../../../../ParkVisitsTracker/concerts.php'>Concerts</a>";
             }
+            if ($signedInUser->username == "ImKelton" || $signedInUser->username == "WebExtension") {
+                echo "<a href='../../../../ParkVisitsTracker/humanity.php'>Cards</a>";
+            }
         }
         ?>
     </div>

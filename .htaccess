@@ -32,3 +32,5 @@ RewriteRule ^rides rides.php [NC,l]
 RewriteRule ^wishlist/(.*) wishlistgame.php?gameName=$1 [NC,l]
 
 RewriteRule ^wishlist wishlistgame.php [NC,l]
+
+RewriteRule ^humanity humanity.php [NC,l]

@@ -761,3 +761,26 @@ CREATE TABLE If Not Exists DiscographyVersionTypes (
     FOREIGN KEY (versionID) REFERENCES DiscographyVersions (versionID),
     FOREIGN KEY (typeID) REFERENCES DiscographyTypes (typeID)
 );
+
+CREATE TABLE If Not Exists Packs (
+    packID int NOT NULL AUTO_INCREMENT,
+    packName text NOT NULL,
+    official tinyint NOT NULL,
+    author int NOT NULL,
+    PRIMARY KEY (packID ASC),
+    FOREIGN KEY (author) REFERENCES Users (userID)
+);
+
+CREATE TABLE If Not Exists Cards (
+    cardID int NOT NULL AUTO_INCREMENT,
+    cardText text NOT NULL,
+    prompt tinyint NOT NULL,
+    PRIMARY KEY (cardID ASC)
+);
+
+CREATE TABLE If Not Exists CardInPack (
+    packID int NOT NULL,
+    cardID int NOT NULL,
+    FOREIGN KEY (packID) REFERENCES Packs (packID),
+    FOREIGN KEY (cardID) REFERENCES Cards (cardID)
+);
