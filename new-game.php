@@ -153,7 +153,7 @@ if (isset($_POST['add-to-library'])) {
             $gameHolder->bind_param("ss", $insertID, $holder);
             $gameHolder->execute();
         }
-        header("Location: ../../../ParkVisitsTracker/game.php");
+        header("Location: ../../../../../game.php");
     }
 }
 ?>
@@ -252,7 +252,7 @@ if (isset($_POST['add-to-library'])) {
         } else if ($type == "library") {
             $library = true;
         } else {
-            header("Location:../../../ParkVisitsTracker/games.php");
+            header("Location: ../../../../../games.php");
         }
     } else if (isset($_GET['id'])) {
         $id = $_GET['id'];
@@ -261,12 +261,12 @@ if (isset($_POST['add-to-library'])) {
             $gameToLibrary = $gameFromID->fetch_object();
             $library = true;
         } else {
-            header("Location:../../../ParkVisitsTracker/games.php");
+            header("Location: ../../../../../games.php");
         }
     }
     if ($library == true) {
         echo "<h1>Add Game To Library</h1>";
-        echo "<script src='../../../ParkVisitsTracker/js/newGameLibrary.js' defer></script>";
+        echo "<script src='../../../../../js/newGameLibrary.js' defer></script>";
         if (isset($gameToLibrary)) {
             $gameName = $gameToLibrary->gameName;
         } else {

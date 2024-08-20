@@ -12,6 +12,6 @@ include_once("includes/setup.php");
 </head>
 <body>
     <?php include_once("includes/header.php"); ?>
-    <p>Home</p>
+    <p class="nothing-message">Nothing here yet, check back later!</p>
 </body>
 </html>

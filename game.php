@@ -21,10 +21,6 @@ if (!isset($_COOKIE['selectedTab'])) {
     $valid = true;
     if (!isset($_SESSION['userID'])) {
         $valid = false;
-    } else {
-        if ($signedInUser->username != "ImKelton" && $signedInUser->username != "WebExtension") {
-            $valid = false;
-        }
     }
     if ($valid == true) {
         if (isset($_GET['game'])) {

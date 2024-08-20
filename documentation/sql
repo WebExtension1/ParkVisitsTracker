@@ -154,7 +154,7 @@ CREATE TABLE If Not Exists GamePlatforms (
     platformName text NOT NULL,
     PRIMARY KEY (platformID ASC)
 );
-INSERT INTO `gameplatforms`(`platformName`) VALUES
+INSERT INTO  GamePlatforms (platformName) VALUES
 ("Wii"),
 ("Xbox 360"),
 ("Xbox One"),
@@ -186,7 +186,7 @@ CREATE TABLE If Not Exists GameFormats (
     formatName text NOT NULL,
     PRIMARY KEY (formatID ASC)
 );
-INSERT INTO `gameformats`(`formatName`) VALUES
+INSERT INTO  GameFormats (formatName) VALUES
 ("Physical"),
 ("Digital"),
 ("Subscription");
@@ -762,6 +762,8 @@ CREATE TABLE If Not Exists DiscographyVersionTypes (
     FOREIGN KEY (typeID) REFERENCES DiscographyTypes (typeID)
 );
 
+/* Cards Against Humanity */
+
 CREATE TABLE If Not Exists Packs (
     packID int NOT NULL AUTO_INCREMENT,
     packName text NOT NULL,
@@ -783,4 +785,85 @@ CREATE TABLE If Not Exists CardInPack (
     cardID int NOT NULL,
     FOREIGN KEY (packID) REFERENCES Packs (packID),
     FOREIGN KEY (cardID) REFERENCES Cards (cardID)
+);
+
+/* Invoices */
+
+CREATE TABLE If Not Exists PO (
+POID int NOT NULL AUTO_INCREMENT,
+PO int NOT NULL,
+PRIMARY KEY (POID ASC)
+);
+
+CREATE TABLE If Not Exists Part (
+partID int NOT NULL AUTO_INCREMENT,
+partName text NOT NULL,
+price int,
+PRIMARY KEY (partID ASC)
+);
+
+CREATE TABLE If Not Exists GRN (
+GRNID int NOT NULL AUTO_INCREMENT,
+documentID int NOT NULL,
+deliveryNote text,
+deliveryDate date,
+PRIMARY KEY (GRNID ASC)
+);
+
+CREATE TABLE If Not Exists Invoice (
+invoiceID int NOT NULL AUTO_INCREMENT,
+invoicePrintID int NOT NULL,
+invoiceDate date,
+PRIMARY KEY (invoiceID ASC)
+);
+
+CREATE TABLE If Not Exists GRNPart (
+GRNID int NOT NULL,
+partID int NOT NULL,
+quantity int NOT NULL,
+FOREIGN KEY (GRNID) REFERENCES GRN (GRNID),
+FOREIGN KEY (partID) REFERENCES Part (partID)
+);
+
+CREATE TABLE If Not Exists InvoicePart (
+invoiceID int NOT NULL,
+partID int NOT NULL,
+quantity int NOT NULL,
+FOREIGN KEY (invoiceID) REFERENCES Invoice (invoiceID),
+FOREIGN KEY (partID) REFERENCES Part (partID)
+);
+
+CREATE TABLE If Not Exists POGRN (
+GRNID int NOT NULL,
+POID int NOT NULL,
+FOREIGN KEY (GRNID) REFERENCES GRN (GRNID),
+FOREIGN KEY (POID) REFERENCES PO (POID)
+);
+
+CREATE TABLE If Not Exists POPart (
+partID int NOT NULL,
+POID int NOT NULL,
+quantity int NOT NULL,
+FOREIGN KEY (partID) REFERENCES Part (partID),
+FOREIGN KEY (POID) REFERENCES PO (POID) 
+);
+
+CREATE TABLE If Not Exists POInvoice (
+invoiceID int NOT NULL,
+POID int NOT NULL,
+FOREIGN KEY (invoiceID) REFERENCES Invoice (invoiceID),
+FOREIGN KEY (POID) REFERENCES PO (POID) 
+);
+
+CREATE TABLE If Not Exists Problem (
+problemID int NOT NULL AUTO_INCREMENT,
+problemName text NOT NULL ,
+PRIMARY KEY (problemID ASC)
+);
+
+CREATE TABLE If Not Exists ProblemPO (
+problemID int NOT NULL,
+POID int NOT NULL,
+FOREIGN KEY (problemID) REFERENCES Problem (problemID),
+FOREIGN KEY (POID) REFERENCES PO (POID)
 );
