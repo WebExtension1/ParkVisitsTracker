@@ -104,7 +104,14 @@ if (!isset($_COOKIE['selectedTab'])) {
                                         $hidden = "style='display:none;' class='all-games-hidden'";
                                     }
                                     $gameName = str_replace(" ", "+", $game->gameName);
-                                    echo "<tr $hidden><td><a href=\"game/$gameName\">$game->gameName</a></td><td>$game->platformName</td>";
+
+                                    $outputName = $game->gameName;
+                                    $overrideCheck = $mysqli->query("SELECT * FROM GameNameOverride WHERE gameInLibraryID = $game->gameInLibraryID");
+                                    if (mysqli_num_rows($overrideCheck) > 0) {
+                                        $outputName = $overrideCheck->fetch_object()->overrideName;
+                                    }
+
+                                    echo "<tr $hidden><td><a href=\"game/$gameName\">$outputName</a></td><td>$game->platformName</td>";
                                     $percentages = $mysqli->query("SELECT GamePSNP.PSNP, GamePSNP.PSN FROM GamePSNP, GamePlatforms WHERE GamePSNP.gameID = $game->gameID");
                                     if (mysqli_num_rows($percentages) > 0) {
                                         $percentage = $percentages->fetch_object();
@@ -153,7 +160,7 @@ if (!isset($_COOKIE['selectedTab'])) {
                                     echo "<tr $hidden ><td><a href=\"game/$gameName\">$game->gameName</a></td>";
                                     $amount = mysqli_num_rows($mysqli->query("SELECT * FROM GameGuides WHERE GameGuides.gameID = $game->gameID"));
                                     echo "<td>$amount</td>";
-                                    $amount = mysqli_num_rows($mysqli->query("SELECT * FROM Games, GameInLibrary WHERE Games.gameID = GameInLibrary.gameID"));
+                                    $amount = mysqli_num_rows($mysqli->query("SELECT * FROM GameInLibrary WHERE GameInLibrary.gameID = $game->gameID"));
                                     echo "<td>$amount</td><td><a href='new-game/library/$game->gameID'>Add To Library</a></td>";
                                     echo "<td><a href=\"edit-game/$gameName\">Edit</a></td>";
                                     echo "</tr>";

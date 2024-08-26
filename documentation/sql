@@ -215,11 +215,18 @@ CREATE TABLE If Not Exists GameInLibrary (
     platformID int NOT NULL,
     formatID int NOT NULL,
     owner int NOT NULL,
+    dateAdded  datetime NOT NULL DEFAULT NOW(),
     PRIMARY KEY (gameInLibraryID ASC),
     FOREIGN KEY (gameID) REFERENCES Games (gameID),
     FOREIGN KEY (platformID) REFERENCES GamePlatforms (platformID),
     FOREIGN KEY (formatID) REFERENCES GameFormats (formatID),
     FOREIGN KEY (owner) REFERENCES Users (userID)
+);
+
+CREATE TABLE If Not Exists GameNameOverride (
+    gameInLibraryID int NOT NULL,
+    overrideName text NOT NULL,
+    FOREIGN KEY (gameInLibraryID) REFERENCES GameInLibrary (gameInLibraryID)
 );
 
 CREATE TABLE If Not Exists PhysicalGameOwner (

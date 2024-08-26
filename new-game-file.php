@@ -152,14 +152,20 @@ if (isset($_POST['add-to-library'])) {
         $libraryGame = $mysqli->prepare("INSERT INTO GameInLibrary (gameID, platformID, formatID, owner) VALUES (?, ?, ?, ?)");
         $libraryGame->bind_param("ssss", $game, $platform, $format, $owner);
         $libraryGame->execute();
+        $insertID = mysqli_insert_id($mysqli);
         if ($_POST['gameFormat'] == 1) {
-            $insertID = mysqli_insert_id($mysqli);
             $holder = $_POST['gameHolder'];
             $gameHolder = $mysqli->prepare("INSERT INTO PhysicalGameOwner VALUES (?, ?)");
             $gameHolder->bind_param("ss", $insertID, $holder);
             $gameHolder->execute();
         }
-        header("Location: ../../../../../game.php");
+        if ($_POST['overrideName'] != "") {
+            $newName = $_POST['overrideName'];
+            $overrideName = $mysqli->prepare("INSERT INTO GameNameOverride (gameInLibraryID, overrideName) VALUES (?, ?)");
+            $overrideName->bind_param("ss", $insertID, $newName);
+            $overrideName->execute();
+        }
+        header("Location: {$directoryString}game.php");
     }
 }
 
@@ -295,6 +301,8 @@ if (isset($_POST['add-to-library'])) {
                 }
                 ?>
             </select>
+            <label for="game-override">Version Name (Optional)</label>
+            <input type="text" name="overrideName" id ="game-override">
             <label for="platform">Platform</label>
             <select name="gamePlatform" id="platform">
                 <?php
