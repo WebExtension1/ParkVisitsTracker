@@ -1,41 +1,6 @@
-/* Global */
-body{
-    background-color: rgb(19, 19, 19);
-}
-
 /* Header */
-#sub-header {
-    display: flex;
-    justify-content: space-around;
-    margin: 40px;
+#nav {
     flex-direction: row;
-    color: white;
-}
-#nav a {
-    color: white;
-    text-decoration: none;
-    margin-right: 20px;
-    margin-left: 20px;
-    font-size: 20px;
-}
-#banner a {
-    color: white;
-    text-decoration: none;
-}
-#site-name {
-    font-size: 40px;
-    margin: 40px 0px 27px 0px;
-    color: white;
-}
-#logout {
-    position: absolute;
-    margin-top: 154px;
-    left: calc(100% - 125px);
-    font-size: 20px;
-}
-#banner {
-    display: flex;
-    justify-content: space-around;
 }
 
 /* Home */

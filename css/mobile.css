@@ -1,9 +1,104 @@
+/* Global */
+body{
+    background-color: rgb(19, 19, 19);
+}
+
+
+/* Header */
+#site-name {
+    font-size: 40px;
+    margin: 40px 0px 27px 0px;
+    color: white;
+}
+#sub-header {
+    display: flex;
+    justify-content: space-around;
+    margin: 40px;
+    flex-direction: row;
+    color: white;
+}
+#banner a {
+    color: white;
+    text-decoration: none;
+}
+#logout {
+    position: absolute;
+    margin-top: 154px;
+    left: calc(100% - 125px);
+    font-size: 20px;
+}
+#banner {
+    display: flex;
+    justify-content: space-around;
+}
+#nav a {
+    color: white;
+    text-decoration: none;
+    margin-right: 20px;
+    margin-left: 20px;
+    font-size: 20px;
+}
+#nav {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Games */
 .games-view-option {
     display: flex;
     flex-direction: row;
+    justify-content: center;
+}
+.game-view-option p {
+    color: black;
+}
+.games-view-option p:hover {
+    cursor: pointer;
 }
 .games-view-option-1, .games-view-option-2 {
     border: solid 1px black;
     margin-left: -1px;
     padding: 5px;
+}
+.all-games, .all-games a {
+    color: white;
+}
+.games-in-library, .games-in-library a {
+    color: white;
+}
+.game-list thead {
+    background-color: gray;
+    font-size: 20px;
+}
+.game-list thead tr th {
+    padding: 5px;
+    border: 0px;
+}
+.game-list thead tr th:first-child {
+    border-radius: 25px 0px 0px 25px;
+}
+.game-list thead tr th:last-child {
+    border-radius: 0px 25px 25px 0px;
+}
+.game-list {
+    border-collapse: collapse;
+}
+.game-list tbody tr:nth-child(even) {
+    background-color: rgb(54, 54, 54);
+}
+.game-list tbody tr td {
+    font-size: 20px;
+    padding: 5px 20px;
+}
+.game-list tbody tr td:first-child {
+    border-radius: 25px 0px 0px 25px;
+}
+.game-list tbody tr td:last-child {
+    border-radius: 0px 25px 25px 0px;
+}
+.games-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }

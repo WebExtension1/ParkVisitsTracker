@@ -316,13 +316,13 @@ if (isset($_POST['add-to-library'])) {
             <label for="owner">Owner</label>
             <select name="gameOwner" id="owner">
                 <option value="1">Robert</option>
-                <option value="2">Kelton</option>
+                <option value="4">Kelton</option>
             </select>
             <div id='format-holder-div'>
                 <label for="holder">Holder</label>
                 <select name="gameHolder" id="holder">
                     <option value="1">Robert</option>
-                    <option value="2">Kelton</option>
+                    <option value="4">Kelton</option>
                 </select>
             </div>
             <button name='add-to-library'>Add to Library</button>

@@ -79,91 +79,93 @@ if (!isset($_COOKIE['selectedTab'])) {
                 <p class="games-view-option-1" onclick="left()">View Games In Library</p>
                 <p class="games-view-option-2" onclick="right()">View All Games</p>
             </div>
-            <div class="games-in-library">
-                <a href="new-game/library">Add Game</a>
-                <table class="gameList">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Platform</th>
-                            <th>PSNP%</th>
-                            <th>PSN%</th>
-                            <th>Difficulty</th>
-                            <th>Hours</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                            $games = $mysqli->query("SELECT * FROM GameInLibrary, Games, GamePlatforms WHERE Games.gameID = GameInLibrary.gameID AND GameInLibrary.platformID = GamePlatforms.platformID ORDER BY gameName ASC");
-                            $iteration = 1;
-                            $hidden = "";
-                            while ($game = $games->fetch_object()) {
-                                if ($iteration == 11) {
-                                    echo "<tr class='load-more-all-games-row'><td><button class='load-more-all-games'>Load More</button></td></tr>";
-                                    $hidden = "style='display:none;' class='all-games-hidden'";
+            <div class="games-container">
+                <div class="games-in-library">
+                    <a href="new-game/library">Add Game</a>
+                    <table class="game-list">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Platform</th>
+                                <th>PSNP%</th>
+                                <th>PSN%</th>
+                                <th>Difficulty</th>
+                                <th>Hours</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                $games = $mysqli->query("SELECT * FROM GameInLibrary, Games, GamePlatforms WHERE Games.gameID = GameInLibrary.gameID AND GameInLibrary.platformID = GamePlatforms.platformID ORDER BY gameName ASC");
+                                $iteration = 1;
+                                $hidden = "";
+                                while ($game = $games->fetch_object()) {
+                                    if ($iteration == 11) {
+                                        echo "<tr class='load-more-all-games-row'><td><button class='load-more-all-games'>Load More</button></td></tr>";
+                                        $hidden = "style='display:none;' class='all-games-hidden'";
+                                    }
+                                    $gameName = str_replace(" ", "+", $game->gameName);
+                                    echo "<tr $hidden><td><a href=\"game/$gameName\">$game->gameName</a></td><td>$game->platformName</td>";
+                                    $percentages = $mysqli->query("SELECT GamePSNP.PSNP, GamePSNP.PSN FROM GamePSNP, GamePlatforms WHERE GamePSNP.gameID = $game->gameID");
+                                    if (mysqli_num_rows($percentages) > 0) {
+                                        $percentage = $percentages->fetch_object();
+                                        echo "<td>$percentage->PSNP</td><td>$percentage->PSN</td>";
+                                    } else {
+                                        echo "<td></td><td></td>";
+                                    }
+                                    $guides = $mysqli->query("SELECT * FROM GameGuides WHERE gameID = $game->gameID");
+                                    if (mysqli_num_rows($guides) > 0) {
+                                        $guide = $guides->fetch_object();
+                                        echo "<td>$guide->difficulty/10</td><td>$guide->hours</td>";
+                                    } else {
+                                        echo "<td></td><td></td>";
+                                    }
+                                    echo "</tr>";
+                                    $iteration++;
                                 }
-                                $gameName = str_replace(" ", "+", $game->gameName);
-                                echo "<tr $hidden><td><a href=\"game/$gameName\">$game->gameName</a></td><td>$game->platformName</td>";
-                                $percentages = $mysqli->query("SELECT GamePSNP.PSNP, GamePSNP.PSN FROM GamePSNP, GamePlatforms WHERE GamePSNP.gameID = $game->gameID");
-                                if (mysqli_num_rows($percentages) > 0) {
-                                    $percentage = $percentages->fetch_object();
-                                    echo "<td>$percentage->PSNP</td><td>$percentage->PSN</td>";
-                                } else {
-                                    echo "<td></td><td></td>";
+                                if ($iteration > 10) {
+                                    echo "</div>";
                                 }
-                                $guides = $mysqli->query("SELECT * FROM GameGuides WHERE gameID = $game->gameID");
-                                if (mysqli_num_rows($guides) > 0) {
-                                    $guide = $guides->fetch_object();
-                                    echo "<td>$guide->difficulty/10</td><td>$guide->hours</td>";
-                                } else {
-                                    echo "<td></td><td></td>";
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="all-games">
+                    <a href="new-game/register">Register Game</a>
+                    <table class="game-list">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Guides</th>
+                                <th>Owned</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                $games = $mysqli->query("SELECT * FROM Games ORDER BY gameName ASC");
+                                $iteration = 1;
+                                $hidden = "";
+                                while ($game = $games->fetch_object()) {
+                                    if ($iteration == 11) {
+                                        echo "<tr class='load-more-all-games-row'><td><button class='load-more-all-games'>Load More</button></td></tr>";
+                                        $hidden = "style='display:none;' class='all-games-hidden'";
+                                    }
+                                    $gameName = str_replace(" ", "+", $game->gameName);
+                                    echo "<tr $hidden ><td><a href=\"game/$gameName\">$game->gameName</a></td>";
+                                    $amount = mysqli_num_rows($mysqli->query("SELECT * FROM GameGuides WHERE GameGuides.gameID = $game->gameID"));
+                                    echo "<td>$amount</td>";
+                                    $amount = mysqli_num_rows($mysqli->query("SELECT * FROM Games, GameInLibrary WHERE Games.gameID = GameInLibrary.gameID"));
+                                    echo "<td>$amount</td><td><a href='new-game/library/$game->gameID'>Add To Library</a></td>";
+                                    echo "<td><a href=\"edit-game/$gameName\">Edit</a></td>";
+                                    echo "</tr>";
+                                    $iteration++;
                                 }
-                                echo "</tr>";
-                                $iteration++;
-                            }
-                            if ($iteration > 10) {
-                                echo "</div>";
-                            }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
-            <div class="all-games">
-                <a href="new-game/register">Register Game</a>
-                <table class="gamelist">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Guides</th>
-                            <th>Owned</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                            $games = $mysqli->query("SELECT * FROM Games ORDER BY gameName ASC");
-                            $iteration = 1;
-                            $hidden = "";
-                            while ($game = $games->fetch_object()) {
-                                if ($iteration == 11) {
-                                    echo "<tr class='load-more-all-games-row'><td><button class='load-more-all-games'>Load More</button></td></tr>";
-                                    $hidden = "style='display:none;' class='all-games-hidden'";
+                                if ($iteration > 10) {
+                                    echo "</div>";
                                 }
-                                $gameName = str_replace(" ", "+", $game->gameName);
-                                echo "<tr $hidden ><td><a href=\"game/$gameName\">$game->gameName</a></td>";
-                                $amount = mysqli_num_rows($mysqli->query("SELECT * FROM GameGuides WHERE GameGuides.gameID = $game->gameID"));
-                                echo "<td>$amount</td>";
-                                $amount = mysqli_num_rows($mysqli->query("SELECT * FROM Games, GameInLibrary WHERE Games.gameID = GameInLibrary.gameID"));
-                                echo "<td>$amount</td><td><a href='new-game/library/$game->gameID'>Add To Library</a></td>";
-                                echo "<td><a href=\"edit-game/$gameName\">Edit</a></td>";
-                                echo "</tr>";
-                                $iteration++;
-                            }
-                            if ($iteration > 10) {
-                                echo "</div>";
-                            }
-                        ?>
-                    </tbody>
-                </table>
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         <?php
         }
