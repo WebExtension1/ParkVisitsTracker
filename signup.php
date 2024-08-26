@@ -9,12 +9,12 @@ if (isset($_POST['signup'])) {
 
     $errors = array();
 
-    $usernameQuery = $mysqli->query("SELECT * FROM users WHERE username = '$username'");
+    $usernameQuery = $mysqli->query("SELECT * FROM Users WHERE username = '$username'");
     if (mysqli_num_rows($usernameQuery) > 0) {
         array_push($errors, "Username is taken.");
     }
 
-    $emailQuery = $mysqli->query("SELECT * FROM users WHERE email = '$email'");
+    $emailQuery = $mysqli->query("SELECT * FROM Users WHERE email = '$email'");
     if (mysqli_num_rows($emailQuery) > 0) {
         array_push($errors, "Email is taken.");
     }
@@ -29,7 +29,7 @@ if (isset($_POST['signup'])) {
 
     if (count($errors) == 0) {
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-        $newUserQuery = $mysqli->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+        $newUserQuery = $mysqli->prepare("INSERT INTO Users (username, email, password) VALUES (?, ?, ?)");
         $newUserQuery->bind_param("sss", $username, $email, $passwordHash);
         $newUserQuery->execute();
         $_SESSION['userID'] = $newUserQuery->insert_id;

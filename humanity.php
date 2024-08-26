@@ -16,10 +16,10 @@ include_once("includes/setup.php");
     $packs = $mysqli->query("SELECT * FROM Packs");
     while ($pack = $packs->fetch_object()) {
         echo "<h1>$pack->packName</h1>";
-        $prompts = $mysqli->query("SELECT count(Cards.cardID) as prompts FROM Cards, Packs, CardInPack WHERE Cards.cardID = CardInPack.cardID AND CardInPack.packID = $pack->packID AND cards.prompt = 1");
+        $prompts = $mysqli->query("SELECT count(Cards.cardID) as prompts FROM Cards, Packs, CardInPack WHERE Cards.cardID = CardInPack.cardID AND CardInPack.packID = $pack->packID AND Cards.prompt = 1");
         $promptsAmount = $prompts->fetch_object();
         echo "<p>Prompts: $promptsAmount->prompts</p>";
-        $prompts = $mysqli->query("SELECT count(Cards.cardID) as prompts FROM Cards, Packs, CardInPack WHERE Cards.cardID = CardInPack.cardID AND CardInPack.packID = $pack->packID AND cards.prompt = 0");
+        $prompts = $mysqli->query("SELECT count(Cards.cardID) as prompts FROM Cards, Packs, CardInPack WHERE Cards.cardID = CardInPack.cardID AND CardInPack.packID = $pack->packID AND Cards.prompt = 0");
         $promptsAmount = $prompts->fetch_object();
         echo "<p>Responses: $promptsAmount->prompts</p>";
     }

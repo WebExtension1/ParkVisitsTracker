@@ -7,7 +7,7 @@ if (isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $userQuery = $mysqli->query("SELECT userID, password FROM users WHERE username = '$username'");
+    $userQuery = $mysqli->query("SELECT userID, password FROM Users WHERE username = '$username'");
     $user = $userQuery->fetch_object();
     if (isset($user)) {
         if (password_verify($password, $user->password)) {

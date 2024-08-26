@@ -6,12 +6,12 @@ include_once("includes/setup.php");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice Solver</title>
+    <title>Concerts</title>
     <link rel="stylesheet" href="css/mobile.css" />
     <link rel="stylesheet" href="css/desktop.css" media="only screen and (min-width : 790px)"/>
 </head>
 <body>
     <?php include_once("includes/header.php"); ?>
-    <p>Invoices</p>
+    <p>Concerts</p>
 </body>
 </html>

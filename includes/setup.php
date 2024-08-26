@@ -1,43 +1,41 @@
 <?php
 session_start();
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+$localhost = false;
+if (gethostname() == "RobsPC") {
+    $localhost = true;
+}
+
 // Establishs database connection.
-$mysqli = new mysqli("127.0.0.1", "root", "", "website");
+if ($localhost) {
+    $host_name = '127.0.0.1';
+    $database = 'website';
+    $user_name = 'root';
+    $password = '';
 
-$currentPage = basename($_SERVER['PHP_SELF']);
-
-if (str_contains($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], "index.php")) {
-    $newURL = str_replace("index.php", "", $_SERVER['REQUEST_URI']);
-    header("Location: $newURL");
-} else if (str_contains($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], ".php")) {
-    $newURL = str_replace(".php", "", $_SERVER['REQUEST_URI']);
-    header("Location: $newURL");
+    $mysqli = new mysqli($host_name, $user_name, $password, $database);
+} else {
+    $host_name = 'db5016240611.hosting-data.io';
+    $database = 'dbs13218947';
+    $user_name = 'dbu537197';
+    $password = '4qginJK6bMRSv3s';
+  
+    $mysqli = new mysqli($host_name, $user_name, $password, $database);
 }
 
-// Redirects to login if not signed in.
-if ($currentPage != "login.php" && $currentPage != "signup.php") {  //List of pages that are exempt
-    if (isset($_SESSION['userID'])) {
-        $signedInUser = $mysqli->query("SELECT * FROM users WHERE userID = " . $_SESSION['userID'])->fetch_object();
-    } else if ($currentPage != "game.php" ) {
-        header("Location: login.php");
+$directoryString = "../../../../";
+    if ($localhost) {
+        $directoryString .= "ParkVisitsTracker/";
     }
-}
 
-if (($currentPage == "new-game.php") && ($signedInUser->username != "WebExtension" && $signedInUser->username != "ImKelton" && $signedInUser->username != "KeithJenner" && $signedInUser->username != "PamJenner")) {
-    header("Location: index.php");
-}
-?>
-
-<?php
-  $host_name = 'db5016232520.hosting-data.io';
-  $database = 'dbs13209163';
-  $user_name = 'dbu2775054';
-  $password = '4qginJK6bMRSv3s';
-
-  $link = new mysqli($host_name, $user_name, $password, $database);
-
-  if ($link->connect_error) {
-    die('<p>Failed to connect to MySQL: '. $link->connect_error .'</p>');
-  } else {
+if ($mysqli->connect_error) {
+    die('<p>Failed to connect to MySQL: '. $mysqli->connect_error .'</p>');
+} else {
     $currentPage = basename($_SERVER['PHP_SELF']);
     if (str_contains($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], "index.php")) {
         $newURL = str_replace("index.php", "", $_SERVER['REQUEST_URI']);
@@ -48,16 +46,10 @@ if (($currentPage == "new-game.php") && ($signedInUser->username != "WebExtensio
     }
 
     // Redirects to login if not signed in.
-    if ($currentPage != "login.php" && $currentPage != "signup.php") {  //List of pages that are exempt
-        if (isset($_SESSION['userID'])) {
-            $signedInUser = $mysqli->query("SELECT * FROM users WHERE userID = " . $_SESSION['userID'])->fetch_object();
-        } else if ($currentPage != "game.php" ) {
-            header("Location: login.php");
-        }
-    }
-
-    if (($currentPage == "new-game.php") && ($signedInUser->username != "WebExtension" && $signedInUser->username != "ImKelton" && $signedInUser->username != "KeithJenner" && $signedInUser->username != "PamJenner")) {
+    if (isset($_SESSION['userID'])) {  //List of pages that are exempt
+        $signedInUser = $mysqli->query("SELECT * FROM Users WHERE userID = " . $_SESSION['userID'])->fetch_object();
+    } else if ($currentPage != "index.php" && $currentPage != "login.php" && $currentPage != "signup.php") {
         header("Location: index.php");
     }
-  }
+}
 ?>

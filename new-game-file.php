@@ -6,20 +6,19 @@ $errors = array();
 $library = false;
 
 if (isset($_POST['register'])) {
-    $gameNameExistsQuery = $mysqli->prepare("SELECT * FROM games WHERE gameName = ?");
+    $gameNameExistsQuery = $mysqli->prepare("SELECT * FROM Games WHERE gameName = ?");
     $gameNameExistsQuery->bind_param('s', $_POST['game-name']);
     $gameNameExistsQuery->execute();
     $nameExists = $gameNameExistsQuery->get_result();
-
     if (mysqli_num_rows($nameExists) > 0) {
         array_push($errors, "Game already exists");
     } else {
-        $newGameQuery = $mysqli->prepare("INSERT INTO games (gameName) VALUES (?)");
+        $newGameQuery = $mysqli->prepare("INSERT INTO Games (gameName) VALUES (?)");
         $newGameQuery->bind_param('s', $_POST['game-name']);
         $newGameQuery->execute();
         $gameID = mysqli_insert_id($mysqli);
         
-        $guidesSQL = "INSERT INTO gameguides (gameID, link, difficulty, hours) VALUES ";
+        $guidesSQL = "INSERT INTO GameGuides (gameID, link, difficulty, hours) VALUES ";
         $guidesValid = false;
         for ($guideID = 0; $guideID < count($_POST['guide-link']); $guideID++) {
             $guideLink = $_POST['guide-link'][$guideID];
@@ -50,17 +49,21 @@ if (isset($_POST['register'])) {
         $ids = array();
         $platforms = array();
         for ($cexID = 0; $cexID < count($_POST['cex-link']); $cexID++) {
-            $id = explode("&", explode("id=", $_POST['cex-link'][$cexID])[1])[0];
-            $platform = explode("playstation", $_POST['cex-link'][$cexID])[1][0];
-            if (in_array($id, $ids) || in_array($platform, $platforms)) {
-                $cexValid = false;
+            if ($_POST['cex-link'][$cexID] != "") {
+                $id = explode("&", explode("id=", $_POST['cex-link'][$cexID])[1])[0];
+                $platform = explode("playstation", $_POST['cex-link'][$cexID])[1][0];
+                if (in_array($id, $ids) || in_array($platform, $platforms)) {
+                    $cexValid = false;
+                } else {
+                    array_push($platforms, $platform);
+                    array_push($ids, $id);
+                }
             } else {
-                array_push($platforms, $platform);
-                array_push($ids, $id);
+                $cexValid = false;
             }
         }
         if ($cexValid == true) {
-            $cexSQL = "INSERT INTO gamecex (gameID, id, platformID, cash, voucher) VALUES ";
+            $cexSQL = "INSERT INTO GameCEX (gameID, id, platformID, cash, voucher) VALUES ";
             $cexValid = false;
             for ($cexLoop = 0; $cexLoop < count($_POST['cex-link']); $cexLoop++) {
                 $cexID = $ids[$cexLoop];
@@ -87,17 +90,21 @@ if (isset($_POST['register'])) {
         $ids = array();
         $platforms = array();
         for ($psnpID = 0; $psnpID < count($_POST['psnp-link']); $psnpID++) {
-            $id = explode("-", explode("trophies/", $_POST['psnp-link'][$psnpID])[1])[0];
-            $platform = $_POST['psnp-platform'][$psnpID];
-            if (in_array($id, $ids) || in_array($platform, $platforms)) {
-                $psnpValid = false;
+            if ($_POST['psnp-link'][$psnpID] != "") {
+                $id = explode("-", explode("trophies/", $_POST['psnp-link'][$psnpID])[1])[0];
+                $platform = $_POST['psnp-platform'][$psnpID];
+                if (in_array($id, $ids) || in_array($platform, $platforms)) {
+                    $psnpValid = false;
+                } else {
+                    array_push($platforms, $platform);
+                    array_push($ids, $id);
+                }
             } else {
-                array_push($platforms, $platform);
-                array_push($ids, $id);
+                $psnpValid = false;
             }
         }
         if ($psnpValid == true) {
-            $psnpSQL = "INSERT INTO gamepsnp (gameID, id, PSN, PSNP, hasPlatinum, attainable, platformID) VALUES ";
+            $psnpSQL = "INSERT INTO GamePSNP (gameID, id, PSN, PSNP, hasPlatinum, attainable, platformID) VALUES ";
             $psnpValid = false;
             for ($psnpLoop = 0; $psnpLoop < count($_POST['psnp-link']); $psnpLoop++) {
                 $psnpID = $ids[$psnpLoop];
@@ -121,7 +128,6 @@ if (isset($_POST['register'])) {
                     $psnpValid = true;
                     $psnpSQL .= "($gameID, $psnpID, $psn, $psnp, $hasPlatinum, $attainable, $platform)";
                 }
-                echo $psnpSQL;
             }
             $psnpSQL .= ";";
             if ($psnpValid == true) {
@@ -132,7 +138,7 @@ if (isset($_POST['register'])) {
         }
 
         if (!isset($_POST['stay'])) {
-            //header("Location: ../games.php");
+            header("Location: ../games.php");
         }
     }
 }
@@ -143,19 +149,20 @@ if (isset($_POST['add-to-library'])) {
         $platform = $_POST['gamePlatform'];
         $format = $_POST['gameFormat'];
         $owner = $_POST['gameOwner'];
-        $libraryGame = $mysqli->prepare("INSERT INTO gameInLibrary (gameID, platformID, formatID, owner) VALUES (?, ?, ?, ?)");
+        $libraryGame = $mysqli->prepare("INSERT INTO GameInLibrary (gameID, platformID, formatID, owner) VALUES (?, ?, ?, ?)");
         $libraryGame->bind_param("ssss", $game, $platform, $format, $owner);
         $libraryGame->execute();
         if ($_POST['gameFormat'] == 1) {
             $insertID = mysqli_insert_id($mysqli);
             $holder = $_POST['gameHolder'];
-            $gameHolder = $mysqli->prepare("INSERT INTO physicalGameOwner VALUES (?, ?)");
+            $gameHolder = $mysqli->prepare("INSERT INTO PhysicalGameOwner VALUES (?, ?)");
             $gameHolder->bind_param("ss", $insertID, $holder);
             $gameHolder->execute();
         }
         header("Location: ../../../../../game.php");
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -163,14 +170,14 @@ if (isset($_POST['add-to-library'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Game</title>
-    <link rel="stylesheet" href="../css/mobile.css" />
-    <link rel="stylesheet" href="../css/desktop.css" media="only screen and (min-width : 790px)"/>
+    <link rel="stylesheet" href="<?php echo $directoryString; ?>css/mobile.css" />
+    <link rel="stylesheet" href="<?php echo $directoryString; ?>css/desktop.css" media="only screen and (min-width : 790px)"/>
 </head>
 <body>
     <?php
     include_once("includes/header.php");
-    if (isset($_GET['type'])) {
-        $type = $_GET['type'];
+    if (isset($_GET['extension'])) {
+        $type = $_GET['extension'];
         if ($type == "register") {
             ?>
             <script src="../js/newGameRegister.js" defer></script>
@@ -215,7 +222,7 @@ if (isset($_POST['add-to-library'])) {
                         <label for="psnp-platform">Platform</label>
                         <select name="psnp-platform[]" id="psnp-platform">
                         <?php
-                            $platformsQuery = $mysqli->query("SELECT * FROM gameplatforms");
+                            $platformsQuery = $mysqli->query("SELECT * FROM GamePlatforms");
                             $index = 0;
                             while ($platform = $platformsQuery->fetch_object()) {
                                 echo "<option value='$index'>$platform->platformName</option>";
@@ -256,7 +263,7 @@ if (isset($_POST['add-to-library'])) {
         }
     } else if (isset($_GET['id'])) {
         $id = $_GET['id'];
-        $gameFromID = $mysqli->query("SELECT * FROM games WHERE gameID = $id");
+        $gameFromID = $mysqli->query("SELECT * FROM Games WHERE gameID = $id");
         if (mysqli_num_rows($gameFromID) == 1 ) {
             $gameToLibrary = $gameFromID->fetch_object();
             $library = true;
@@ -277,7 +284,7 @@ if (isset($_POST['add-to-library'])) {
             <label for='game-name'>Game</label>
             <select name="gameName" id='game-name'>
                 <?php
-                $allGames = $mysqli->query("SELECT * FROM games");
+                $allGames = $mysqli->query("SELECT * FROM Games");
                 echo "<option value='0'></option>";
                 while ($game = $allGames->fetch_object()) {
                     $selected = "";
@@ -291,7 +298,7 @@ if (isset($_POST['add-to-library'])) {
             <label for="platform">Platform</label>
             <select name="gamePlatform" id="platform">
                 <?php
-                $allPlatforms = $mysqli->query("SELECT * FROM gamePlatforms");
+                $allPlatforms = $mysqli->query("SELECT * FROM GamePlatforms");
                 while ($platform = $allPlatforms->fetch_object()) {
                     echo "<option value='$platform->platformID'>$platform->platformName</option>";
                 }
@@ -300,7 +307,7 @@ if (isset($_POST['add-to-library'])) {
             <label for="format">Format</label>
             <select name="gameFormat" id="format">
                 <?php
-                $allFormats = $mysqli->query("SELECT * FROM gameFormats");
+                $allFormats = $mysqli->query("SELECT * FROM GameFormats");
                 while ($format = $allFormats->fetch_object()) {
                     echo "<option value='$format->formatID'>$format->formatName</option>";
                 }
