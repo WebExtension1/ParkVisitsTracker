@@ -1,7 +1,6 @@
 RewriteEngine on
 
 RewriteRule ^user/([0-9a-zA-Z_-]+)/?$ user-file.php?username=$1 [NC,l]
-
 RewriteRule ^user userview.php [NC,l]
 
 RewriteRule ^login login.php [NC,l]
@@ -9,31 +8,26 @@ RewriteRule ^login login.php [NC,l]
 RewriteRule ^signup signup.php [NC,l]
 
 RewriteRule ^new-game/library/([0-9a-zA-Z_-]+) new-game-file.php?id=$1 [NC,l]
-
 RewriteRule ^new-game/([0-9a-zA-Z_-]+) new-game-file.php?extension=$1 [NC,l]
 
 RewriteRule ^edit-game/(.*) edit-game-file.php?gameName=$1 [NC,l]
 
 RewriteRule ^games/(.*) game-file.php?game=$1 [NC,l]
-
 RewriteRule ^games game-file.php [NC,l]
 
 RewriteRule ^game/(.*) game-file.php?game=$1 [NC,l]
-
 RewriteRule ^game game-file.php [NC,l]
 
 RewriteRule ^logout logout.php [NC,l]
 
 RewriteRule ^discography discography.php [NC,l]
-
 RewriteRule ^discographies discography.php [NC,l]
 
 RewriteRule ^rides rides.php [NC,l]
 
 RewriteRule ^wishlist/(.*) wishlist-game-file.php?gameName=$1 [NC,l]
-
 RewriteRule ^wishlist wishlist-game-file.php [NC,l]
 
 RewriteRule ^humanity humanity.php [NC,l]
 
-RewriteRule ^invoices invoices.php [NC,l]
+RewriteRule ^portfolio portfolio.php [NC,l]

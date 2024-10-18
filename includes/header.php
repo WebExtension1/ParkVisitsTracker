@@ -26,7 +26,7 @@
             }
             $location = basename($_SERVER['SCRIPT_FILENAME']);
             $return = true;
-            if ($location == "discography.php" || $location == "index.php") {
+            if ($location == "discography.php" || $location == "index.php" || $location == "portfolio.php") {
                 $return = false;
             }
             if (($location == "rides.php") && ($signedInUser->username == "WebExtension")) {
