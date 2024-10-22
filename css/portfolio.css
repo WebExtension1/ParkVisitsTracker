@@ -1,17 +1,17 @@
 .slide1 {
-	animation: slide-in-anim1 2s;
+	animation: slide-in-anim1 1.5s;
 }
 .slide2 {
-	animation: slide-in-anim2 2s;
+	animation: slide-in-anim2 1.5s;
 }
 .slide3 {
-	animation: slide-in-anim3 2s;
+	animation: slide-in-anim3 1.5s;
 }
 .slide4 {
-	animation: slide-in-anim4 2s;
+	animation: slide-in-anim4 1.5s;
 }
 .slide5 {
-	animation: slide-in-anim5 2s;
+	animation: slide-in-anim5 1.5s;
 }
 
 @keyframes slide-in-anim1 {
@@ -24,7 +24,7 @@
 }
 @keyframes slide-in-anim2 {
     0% {
-        transform: translateX(30%);
+        transform: translateX(28%);
     }
     100% {
         transform: translateX(0%);
@@ -48,9 +48,17 @@
 }
 @keyframes slide-in-anim5 {
     0% {
-        transform: translateX(100%);
+        transform: translateX(120%);
     }
     100% {
         transform: translateX(0%);
     }
+}
+
+.slide3, .slide4, .slide5 {
+    transition: transform 0.2s;
+}
+
+h1.slide3:hover, h1.slide4:hover, h1.slide5:hover {
+    transform: scale(1.1);
 }
