@@ -48,7 +48,7 @@ if ($mysqli->connect_error) {
     // Redirects to login if not signed in.
     if (isset($_SESSION['userID'])) {  //List of pages that are exempt
         $signedInUser = $mysqli->query("SELECT * FROM Users WHERE userID = " . $_SESSION['userID'])->fetch_object();
-    } else if ($currentPage != "index.php" && $currentPage != "login.php" && $currentPage != "signup.php") {
+    } else if ($currentPage != "index.php" && $currentPage != "login.php" && $currentPage != "signup.php" && $currentPage != "portfolio-file.php" && $currentPage != "portfolio-projects-file.php" && $currentPage != "portfolio-contact-file.php" && $currentPage != "portfolio-about-file.php") {
         header("Location: index.php");
     }
 }

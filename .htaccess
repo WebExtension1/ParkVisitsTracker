@@ -30,4 +30,10 @@ RewriteRule ^wishlist wishlist-game-file.php [NC,l]
 
 RewriteRule ^humanity humanity.php [NC,l]
 
-RewriteRule ^portfolio portfolio.php [NC,l]
+RewriteRule ^portfolio/projects portfolio-projects-file.php [NC,l]
+
+RewriteRule ^portfolio/contact portfolio-contact-file.php [NC,l]
+
+RewriteRule ^portfolio/about portfolio-about-file.php [NC,l]
+
+RewriteRule ^portfolio$ portfolio-file.php [NC,l]

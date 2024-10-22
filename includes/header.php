@@ -1,7 +1,7 @@
 <header>
     <?php
         $location = basename($_SERVER['SCRIPT_FILENAME']);
-        if ($location != "portfolio.php") {
+        if ($location != "portfolio-file.php" && $location != "portfolio-projects-file.php" && $location != "portfolio-contact-file.php" && $location != "portfolio-about-file.php") {
     ?>
     <div id="banner">
         <a href='<?php echo $directoryString; ?>' id="site-name">webextension</a>
@@ -10,7 +10,7 @@
     <div id="sub-header">
         <div id="nav">
             <?php
-            if (isset($signedInUser) && $location != "portfolio.php") {
+            if (isset($signedInUser) && $location != "portfolio-file.php" && $location != "portfolio-projects-file.php" && $location != "portfolio-contact-file.php" && $location != "portfolio-about-file.php") {
                 echo "<a href='$directoryString'>Home</a><a href='{$directoryString}discography.php'>Discographies</a>";
                 if ($signedInUser->username == "WebExtension") {
                     echo "<a href='{$directoryString}rides.php'>Rides</a>";
@@ -26,7 +26,7 @@
                 }
             }
             $return = true;
-            if ($location == "discography.php" || $location == "index.php" || $location == "portfolio.php") {
+            if ($location == "discography.php" || $location == "index.php" || $location == "portfolio-file.php" || $location != "portfolio-projects-file.php" || $location != "portfolio-contact-file.php" || $location != "portfolio-about-file.php") {
                 $return = false;
             }
             if (($location == "rides.php") && ($signedInUser->username == "WebExtension")) {
