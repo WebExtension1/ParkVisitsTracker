@@ -1,0 +1,56 @@
+.slide1 {
+	animation: slide-in-anim1 2s;
+}
+.slide2 {
+	animation: slide-in-anim2 2s;
+}
+.slide3 {
+	animation: slide-in-anim3 2s;
+}
+.slide4 {
+	animation: slide-in-anim4 2s;
+}
+.slide5 {
+	animation: slide-in-anim5 2s;
+}
+
+@keyframes slide-in-anim1 {
+    0% {
+        transform: translateX(20%);
+    }
+    100% {
+        transform: translateX(0%);
+    }
+}
+@keyframes slide-in-anim2 {
+    0% {
+        transform: translateX(30%);
+    }
+    100% {
+        transform: translateX(0%);
+    }
+}
+@keyframes slide-in-anim3 {
+    0% {
+        transform: translateX(40%);
+    }
+    100% {
+        transform: translateX(0%);
+    }
+}
+@keyframes slide-in-anim4 {
+    0% {
+        transform: translateX(70%);
+    }
+    100% {
+        transform: translateX(0%);
+    }
+}
+@keyframes slide-in-anim5 {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(0%);
+    }
+}
