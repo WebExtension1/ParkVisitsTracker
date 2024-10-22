@@ -7,7 +7,7 @@ error_reporting(E_ALL);
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 $localhost = false;
-if (gethostname() == "RobsPC") {
+if (gethostname() == "RobsPC" || gethostname() == "RobsLaptop") {
     $localhost = true;
 }
 
@@ -29,9 +29,9 @@ if ($localhost) {
 }
 
 $directoryString = "../../../../";
-    if ($localhost) {
-        $directoryString .= "ParkVisitsTracker/";
-    }
+if ($localhost) {
+    $directoryString .= "ParkVisitsTracker/";
+}
 
 if ($mysqli->connect_error) {
     die('<p>Failed to connect to MySQL: '. $mysqli->connect_error .'</p>');

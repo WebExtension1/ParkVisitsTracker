@@ -1,0 +1,30 @@
+{
+"Projects": [
+    {
+        "name": "Concert Tracker",
+        "priority": 3,
+        "languages": ["C#"]
+    },
+    {
+        "name": "Theme Park Tracker",
+        "priority": 4,
+        "languages": ["C#"]
+    },
+    {
+        "name": "Cantor College",
+        "priority": 5,
+        "languages": ["HTML", "PHP", "CSS"]
+    },
+    {
+        "name": "Performance Tracker",
+        "priority": 2,
+        "languages": ["HTML", "PHP", "CSS", "JS"]
+    },
+    {
+        "name": "Inventory Management System",
+        "priority": 1,
+        "languages": ["HTML", "PHP", "CSS", "JS", "Apache"],
+        "frameworks": ["Laravel", "Breeze"]
+    }
+]
+}

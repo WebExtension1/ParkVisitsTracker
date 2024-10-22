@@ -20,22 +20,7 @@ include_once("includes/setup.php");
         $gameNameFromGET = $_GET['gameName'];
         $gameNameFromGET = str_replace("+", " ", $gameNameFromGET);
         $gameNameQuery = $mysqli->query("SELECT * FROM games WHERE gameName = '$gameNameFromGET'");
-        if (mysqli_num_rows($gameNameQuery) > 0) {<?php
-            include_once("includes/setup.php");
-            ?>
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Wishlist Game</title>
-                <link rel="stylesheet" href="css/mobile.css" />
-                <link rel="stylesheet" href="css/desktop.css" media="only screen and (min-width : 790px)"/>
-            </head>
-            <body>
-                <?php
-                include_once("includes/header.php");
-            
+        if (mysqli_num_rows($gameNameQuery) > 0) {
                 $gameNameValid = false;
                 if (isset($_GET['gameName'])) {
                     $gameNameValid = true;
@@ -79,6 +64,7 @@ include_once("includes/setup.php");
                 </form>
             </body>
             </html>
+            <?php
             $gameName = $gameNameFromGET;
         } else {
             $gameNameQuery = $mysqli->query("SELECT * FROM games WHERE gameID = '$gameNameFromGET'");

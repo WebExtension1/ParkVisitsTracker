@@ -10,6 +10,30 @@
 </head>
 <body>
 <?php include_once("includes/header.php"); ?>
-    <h1>Hi</h1>
+    <h1 id="site-name">Portfolio</h1>
+    <?php
+    $json = file_get_contents("data/portfolio.json");
+    $json_data = json_decode($json, true);
+
+    $num = 0;
+    foreach ($json_data as $firstLine) {
+        if ($num == 0) {
+            echo "<p>" . var_dump($firstLine) . "</p>";
+        }
+        foreach ($firstLine as $secondLine) {
+            if ($num == 0) {
+                echo "<p>" . var_dump($secondLine) . "</p>";
+            }
+            foreach ($secondLine as $thirdLine) {
+                if ($num == 0) {
+                    echo "<p>" . var_dump($thirdLine) . "</p>";
+                }
+                $num++;
+            }
+        }
+    }
+
+    echo $json_data[0];
+    ?>
 </body>
 </html>
