@@ -3,28 +3,33 @@
     {
         "name": "Concert Tracker",
         "priority": 3,
-        "languages": ["C#"]
+        "languages": ["C#"],
+        "image": "inventory-management.png"
     },
     {
         "name": "Theme Park Tracker",
         "priority": 4,
-        "languages": ["C#"]
+        "languages": ["C#"],
+        "image": "inventory-management.png"
     },
     {
         "name": "Cantor College",
         "priority": 5,
-        "languages": ["HTML", "PHP", "CSS"]
+        "languages": ["HTML", "PHP", "CSS"],
+        "image": "inventory-management.png"
     },
     {
         "name": "Performance Tracker",
         "priority": 2,
-        "languages": ["HTML", "PHP", "CSS", "JS"]
+        "languages": ["HTML", "PHP", "CSS", "JS"],
+        "image": "inventory-management.png"
     },
     {
         "name": "Inventory Management System",
         "priority": 1,
         "languages": ["HTML", "PHP", "CSS", "JS", "Apache"],
-        "frameworks": ["Laravel", "Breeze"]
+        "frameworks": ["Laravel", "Breeze"],
+        "image": "inventory-management.png"
     }
 ]
 }

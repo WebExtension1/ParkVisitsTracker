@@ -55,10 +55,19 @@
     }
 }
 
-.slide3, .slide4, .slide5 {
+.enlarge1 {
     transition: transform 0.2s;
 }
 
-h1.slide3:hover, h1.slide4:hover, h1.slide5:hover {
+.enlarge1:hover {
     transform: scale(1.1);
+}
+
+.enlarge2 {
+    transition: transform 0.2s;
+}
+
+.enlarge2:hover {
+    transform: scale(1.05);
+    cursor:pointer;
 }
