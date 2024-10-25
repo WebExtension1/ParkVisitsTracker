@@ -13,8 +13,8 @@
 </head>
 <body>
     <?php include_once("includes/header.php"); ?>
-    <a href="data/Robert Jenner CV.doc" style="position: absolute; right: 160px; top: 75px; color: white; border: solid 2px white; padding: 10px; text-decoration: none;" download>Download CV</a>
-    <a href="https://github.com/WebExtension1" style="position: absolute; right: 75px; top: 75px; color: white; border: solid 2px white; padding: 10px; text-decoration: none;" target="_blank">GitHub</a>
+    <a href="data/Robert Jenner CV.doc" style="position: absolute; right: 110px; top: 25px; color: white; border: solid 2px white; padding: 10px; text-decoration: none;" download>Download CV</a>
+    <a href="https://github.com/WebExtension1" style="position: absolute; right: 25px; top: 25px; color: white; border: solid 2px white; padding: 10px; text-decoration: none;" target="_blank">GitHub</a>
     <div style="display: flex; flex-direction: row; gap: 10vw">
         <div>
             <h1 style="margin: calc(50vh - 90px) 0px 5px 45px; color: white; font-size: 50px;" class="slide1 enlarge1">Robert Jenner</h1>

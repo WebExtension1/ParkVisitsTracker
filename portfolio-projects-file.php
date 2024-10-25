@@ -12,8 +12,10 @@
     <link rel="stylesheet" href="<?php echo $directoryString; ?>css/portfolio.css" defer>
 </head>
 <body>
-    <p><a href="<?php echo $directoryString; ?>portfolio" style="position: absolute; color: white; text-decoration: none; margin-left: 20px; margin-top: -20px;"><-- Home --</a></p>
-    <h1 style="display:flex; justify-content: center; color: white; font-size: 60px;">Projects</h1>
+    <a href="data/Robert Jenner CV.doc" style="position: absolute; right: 110px; top: 25px; color: white; border: solid 2px white; padding: 10px; text-decoration: none;" download>Download CV</a>
+    <a href="https://github.com/WebExtension1" style="position: absolute; right: 25px; top: 25px; color: white; border: solid 2px white; padding: 10px; text-decoration: none;" target="_blank">GitHub</a>
+    <p style="font-size: 40px;"><a href="<?php echo $directoryString; ?>portfolio" style="position: absolute; color: white; text-decoration: none; margin-left: 20px; margin-top: 15px;"><-- Home --</a></p>
+    <h1 style="display:flex; justify-content: center; color: white; font-size: 60px; margin-top: -20px;">Projects</h1>
     <?php
     $json = file_get_contents("data/portfolio.json");
     $json_data = json_decode($json, true);
